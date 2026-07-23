@@ -25,13 +25,14 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-//import interface_adapter.SetupView.SignupController;
-//import interface_adapter.SetupView.SignupState;
-//import interface_adapter.SetupView.SignupViewModel;
+//import interface_adapter.ConfirmView.SignupController;
+//import interface_adapter.ConfirmView.SignupState;
+//import interface_adapter.ConfirmView.SignupViewModel;
 
-    /**
-     * The View for the SetUp Use Case.
-     */
-    public class SetupView{
+/**
+ * The View for the SetUp Use Case.
+ */
+
+public class ConfirmView {
 
 }
