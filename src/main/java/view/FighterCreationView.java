@@ -1,15 +1,20 @@
 package view;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 public class FighterCreationView extends JPanel {
+    private static final Color BACKGROUND = new Color(0x1E1E1E);
+    private static final Color PANEL = new Color(0x2B2B2B);
+    private static final Color ACCENT_RED = new Color(0xD32F2F);
+    private static final Color TEXT = new Color(0xF5F5F5);
+    private static final Color SUBTEXT = new Color(0xBDBDBD);
+    private static final Color BORDER = new Color(0x555555);
     private final JLabel rerollsRemainingLabel;
     private final JPanel fighterPanel;
 
     public FighterCreationView() {
-        setLayout(new BorderLayout(20, 0));
-        setBackground(Color.white);
+        setLayout(new BorderLayout());
+        setBackground(BACKGROUND);
 
         fighterPanel = createYourFighterPanel();
         add(fighterPanel, BorderLayout.WEST);
@@ -24,24 +29,36 @@ public class FighterCreationView extends JPanel {
      */
     private JPanel createYourFighterPanel() {
         JPanel panel = new JPanel();
-
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createLineBorder(BORDER));
+
 
         return panel;
     }
 
     private JPanel createFighterProgressPanel()  {
         JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        panel.setBackground(PANEL);
+
         return panel;
     }
 
     private JPanel createAttributeTablePanel() {
         JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        panel.setBackground(PANEL);
+        panel.setBorder(BorderFactory.createLineBorder(BORDER));
+
         return panel;
     }
 
     private JPanel createAttributePanel() {
         JPanel panel = new JPanel();
+        panel.setBackground(PANEL);
+        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER));
         return panel;
     }
 
@@ -51,51 +68,68 @@ public class FighterCreationView extends JPanel {
      */
     private JPanel createFighterDraftPanel() {
         JPanel panel = new JPanel();
+        panel.setBackground(PANEL);
+        panel.setBorder(BorderFactory.createLineBorder(BORDER));
         return panel;
     }
 
     private JPanel createDraftHeaderPanel(){
         JPanel panel = new JPanel();
+        panel.setBackground(PANEL);
         return panel;
     }
 
     private JPanel createAttributeHeaderPanel() {
         JPanel panel = new JPanel();
+        panel.setBackground(PANEL);
+        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER));
         return panel;
     }
 
-    private JPanel CreatedraftContentPanel(){
+    private JPanel CreateDraftContentPanel(){
         JPanel panel = new JPanel();
+        panel.setBackground(PANEL);
         return panel;
     }
 
     private JPanel createPreRollPanel() {
         JPanel panel = new JPanel();
+        panel.setBackground(PANEL);
+        panel.setBorder(BorderFactory.createDashedBorder(BORDER));
         return panel;
     }
 
     private JPanel createFighterCardPanel() {
         JPanel panel = new JPanel();
+        panel.setBackground(PANEL);
+        panel.setBorder(BorderFactory.createLineBorder(BORDER));
         return panel;
     }
 
     private JPanel createFighterHeaderPanel() {
         JPanel panel = new JPanel();
+        panel.setBackground(PANEL);
+        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER));
         return panel;
     }
 
     private JPanel createFighterStatsTablePanel() {
         JPanel panel = new JPanel();
+        panel.setBackground(PANEL);
+        panel.setLayout(new GridLayout(6, 1));
         return panel;
     }
 
     private JPanel createFighterStatsPanel() {
         JPanel panel = new JPanel();
+        panel.setBackground(PANEL);
+        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER));
         return panel;
     }
 
     private JPanel createBuildActionsPanel() {
         JPanel panel = new JPanel();
+        panel.setBackground(BACKGROUND);JPanel panel = new JPanel();
         return panel;
     }
 
