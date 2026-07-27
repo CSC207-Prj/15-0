@@ -22,7 +22,8 @@ public class FighterCreationView extends JPanel {
         progressBar = new JProgressBar(0, 6);
 
         add(createYourFighterPanel(), BorderLayout.WEST);
-        add(createRerollsRemainingLabel(), BorderLayout.NORTH);
+        add(createFighterDraftPanel(), BorderLayout.CENTER);
+//        add(createRerollsRemainingLabel(), BorderLayout.NORTH);
 
     }
 
@@ -61,7 +62,6 @@ public class FighterCreationView extends JPanel {
         JLabel attributesLabel = new JLabel("Attributes Filled: ");
         attributesLabel.setForeground(SUBTEXT);
         attributesLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        panel.add(attributesLabel);
 
         attributesFilledLabel.setForeground(ACCENT_RED);
         attributesFilledLabel.setFont(new Font("Arial", Font.BOLD, 18));
