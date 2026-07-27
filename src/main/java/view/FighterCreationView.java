@@ -101,19 +101,19 @@ public class FighterCreationView extends JPanel {
         panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         JLabel attributeLabel = new JLabel("ATTRIBUTE");
         JLabel valueLabel = new JLabel("VALUE");
-        JLabel sourceLabel = new JLabel("SOURCE");
+        JLabel sourceFighterLabel = new JLabel("FIGHTER");
 
         attributeLabel.setForeground(SUBTEXT);
         valueLabel.setForeground(SUBTEXT);
-        sourceLabel.setForeground(SUBTEXT);
+        sourceFighterLabel.setForeground(SUBTEXT);
 
         attributeLabel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         valueLabel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-        sourceLabel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        sourceFighterLabel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
 
         panel.add(attributeLabel);
         panel.add(valueLabel);
-        panel.add(sourceLabel);
+        panel.add(sourceFighterLabel);
 
         return panel;
     }
