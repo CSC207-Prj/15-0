@@ -144,7 +144,7 @@ public class FighterCreationView extends JPanel {
 
     /**
      * Creates the fighter draft panel on the right side of the screen.
-     * The player spins the for a fighter and assigns their attributes
+     * The player spins for a fighter and assigns their attributes.
      */
     private JPanel createFighterDraftPanel() {
         JPanel panel = new JPanel();
