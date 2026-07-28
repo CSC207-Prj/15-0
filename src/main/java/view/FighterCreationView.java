@@ -44,6 +44,7 @@ public class FighterCreationView extends JPanel {
 
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(PANEL);
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(12, 0, 6, 0));
         titlePanel.add(titleLabel, BorderLayout.CENTER);
         titlePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, titlePanel.getPreferredSize().height));
         panel.add(titlePanel);
@@ -182,7 +183,7 @@ public class FighterCreationView extends JPanel {
 
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        panel.add(createPreRollPanel(), BorderLayout.CENTER);
+        panel.add(createFighterCardPanel(), BorderLayout.CENTER);
 
         return panel;
     }
@@ -249,16 +250,62 @@ public class FighterCreationView extends JPanel {
     }
 
     private JPanel createFighterCardPanel() {
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(PANEL);
         panel.setBorder(BorderFactory.createLineBorder(BORDER));
+
+        panel.add(createFighterHeaderPanel(), BorderLayout.NORTH);
+        panel.add(createFighterStatsTablePanel(), BorderLayout.CENTER);
+
         return panel;
     }
 
     private JPanel createFighterHeaderPanel() {
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(PANEL);
-        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
+
+        JPanel fighterInfoPanel = new JPanel();
+        fighterInfoPanel.setLayout(new BoxLayout(fighterInfoPanel, BoxLayout.Y_AXIS));
+        fighterInfoPanel.setBackground(PANEL);
+
+        JLabel nameLabel = new JLabel("Fighter Name");
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        nameLabel.setForeground(TEXT);
+
+        JLabel detailsLabel = new JLabel("Record • Weight");
+        detailsLabel.setFont(new Font("Arial", Font.PLAIN, 30));
+        detailsLabel.setForeground(SUBTEXT);
+
+        JPanel overallPanel = new JPanel();
+        overallPanel.setLayout(new BoxLayout(overallPanel, BoxLayout.Y_AXIS));
+        overallPanel.setBackground(PANEL);
+        overallPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(BORDER),
+                BorderFactory.createEmptyBorder(8, 14, 8, 14)));
+
+        JLabel overallTitleLabel = new JLabel("Overall Score");
+        overallTitleLabel.setFont(new Font("Arial", Font.PLAIN, 30));
+        overallTitleLabel.setForeground(SUBTEXT);
+        overallTitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel overallValueLabel = new JLabel("Value");
+        overallValueLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        overallValueLabel.setForeground(ACCENT_RED);
+        overallValueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        fighterInfoPanel.add(nameLabel);
+        fighterInfoPanel.add(Box.createVerticalStrut(8));
+        fighterInfoPanel.add(detailsLabel);
+
+        overallPanel.add(Box.createVerticalGlue());
+        overallPanel.add(overallTitleLabel);
+        overallPanel.add(Box.createVerticalStrut(3));
+        overallPanel.add(overallValueLabel);
+        overallPanel.add(Box.createVerticalGlue());
+
+        panel.add(fighterInfoPanel, BorderLayout.WEST);
+        panel.add(overallPanel, BorderLayout.EAST);
         return panel;
     }
 
@@ -266,6 +313,7 @@ public class FighterCreationView extends JPanel {
         JPanel panel = new JPanel();
         panel.setBackground(PANEL);
         panel.setLayout(new GridLayout(6, 1));
+
         return panel;
     }
 
