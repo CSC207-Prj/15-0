@@ -147,28 +147,104 @@ public class FighterCreationView extends JPanel {
      * The player spins for a fighter and assigns their attributes.
      */
     private JPanel createFighterDraftPanel() {
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(PANEL);
-        panel.setBorder(BorderFactory.createLineBorder(BORDER));
+        panel.add(createDraftHeaderPanel(), BorderLayout.NORTH);
+        panel.add(createDraftContentPanel(), BorderLayout.CENTER);
+        panel.add(createBuildActionsPanel(), BorderLayout.SOUTH);
         return panel;
     }
 
     private JPanel createDraftHeaderPanel(){
         JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(PANEL);
+        panel.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
+
+        JLabel titleLabel = new JLabel("FIGHTER DRAFT");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        titleLabel.setForeground(TEXT);
+
+        JLabel instructionLabel = new JLabel("Spin to reveal a random UFC fighter.");
+        instructionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        instructionLabel.setForeground(SUBTEXT);
+
+        panel.add(titleLabel);
+        panel.add(Box.createVerticalStrut(4));
+        panel.add(instructionLabel);
+
         return panel;
     }
 
     private JPanel createDraftContentPanel(){
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(PANEL);
+
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+
+        panel.add(createPreRollPanel(), BorderLayout.CENTER);
+
         return panel;
     }
 
     private JPanel createPreRollPanel() {
         JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(PANEL);
-        panel.setBorder(BorderFactory.createDashedBorder(BORDER));
+
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createDashedBorder(BORDER),
+                BorderFactory.createEmptyBorder(30, 30, 30, 30)
+        ));
+
+        ImageIcon originalIcon = new ImageIcon("src/main/resources/images/diceroll.png");
+        Image scaledImage = originalIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+
+        JLabel iconLabel = new JLabel();
+        iconLabel.setIcon(new ImageIcon(scaledImage));
+        iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel titleLabel = new JLabel("Ready to Spin");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setForeground(TEXT);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel line1 = new JLabel("Click the button below to reveal");
+        line1.setFont(new Font("Arial", Font.PLAIN, 16));
+        line1.setForeground(SUBTEXT);
+        line1.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel line2 = new JLabel("a random UFC fighter.");
+        line2.setFont(new Font("Arial", Font.PLAIN, 16));
+        line2.setForeground(SUBTEXT);
+        line2.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JButton spinButton = new JButton("Spin Fighter");
+        spinButton.setFont(new Font("Arial", Font.BOLD, 18));
+        spinButton.setForeground(TEXT);
+        spinButton.setBackground(ACCENT_RED);
+        spinButton.setOpaque(true);
+        spinButton.setContentAreaFilled(true);
+        spinButton.setBorderPainted(false);
+        spinButton.setFocusPainted(false);
+        Dimension buttonSize = new Dimension(220, 50);
+        spinButton.setPreferredSize(buttonSize);
+        spinButton.setMinimumSize(buttonSize);
+        spinButton.setMaximumSize(buttonSize);
+        spinButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        panel.add(Box.createVerticalGlue());
+        panel.add(iconLabel);
+        panel.add(Box.createVerticalStrut(12));
+        panel.add(titleLabel);
+        panel.add(Box.createVerticalStrut(15));
+        panel.add(line1);
+        panel.add(Box.createVerticalStrut(4));
+        panel.add(line2);
+        panel.add(Box.createVerticalStrut(30));
+        panel.add(spinButton);
+        panel.add(Box.createVerticalGlue());
+
         return panel;
     }
 
