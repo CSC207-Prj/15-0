@@ -60,6 +60,7 @@ public class FighterCreationView extends JPanel {
     private JPanel createFighterProgressPanel()  {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(0, 18, 12, 18));
 
         JLabel attributesLabel = new JLabel("Attributes Filled: ");
         attributesLabel.setForeground(SUBTEXT);
@@ -68,10 +69,15 @@ public class FighterCreationView extends JPanel {
         attributesFilledLabel.setForeground(ACCENT_RED);
         attributesFilledLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
-        progressBar.setValue(3);
+        progressBar.setUI(new BasicProgressBarUI());
+        progressBar.setForeground(ACCENT_RED);
+        progressBar.setBackground(new Color(0x3A3A3A));
+        progressBar.setOpaque(true);
+        progressBar.setBorder(BorderFactory.createLineBorder(BORDER));
 
         panel.add(attributesLabel);
         panel.add(attributesFilledLabel);
+        panel.add(Box.createVerticalStrut(8));
         panel.add(progressBar);
 
         panel.setBackground(PANEL);
@@ -109,6 +115,11 @@ public class FighterCreationView extends JPanel {
         valueLabel.setForeground(SUBTEXT);
         sourceFighterLabel.setForeground(SUBTEXT);
 
+        Font headerFont = new Font("Arial", Font.BOLD, 18);
+        attributeLabel.setFont(headerFont);
+        valueLabel.setFont(headerFont);
+        sourceFighterLabel.setFont(headerFont);
+
         attributeLabel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         valueLabel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         sourceFighterLabel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
@@ -136,6 +147,9 @@ public class FighterCreationView extends JPanel {
         attributeLabel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         valueLabel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         sourceFighterLabel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        attributeLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        valueLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        sourceFighterLabel.setFont(new Font("Arial", Font.PLAIN, 17));
 
         panel.add(attributeLabel);
         panel.add(valueLabel);
@@ -283,15 +297,15 @@ public class FighterCreationView extends JPanel {
         overallPanel.setBackground(BACKGROUND);
         overallPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDER),
-                BorderFactory.createEmptyBorder(8, 14, 8, 14)));
+                BorderFactory.createEmptyBorder(6, 12, 6, 12)));
 
-        JLabel overallTitleLabel = new JLabel("Overall Score");
+        JLabel overallTitleLabel = new JLabel("OVR");
         overallTitleLabel.setFont(new Font("Arial", Font.PLAIN, 30));
         overallTitleLabel.setForeground(SUBTEXT);
         overallTitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel overallValueLabel = new JLabel("Value");
-        overallValueLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        overallValueLabel.setFont(new Font("Segoe UI", Font.BOLD, 40));
         overallValueLabel.setForeground(ACCENT_RED);
         overallValueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -341,7 +355,6 @@ public class FighterCreationView extends JPanel {
 
         JProgressBar statBar = new JProgressBar(0, 100);
         statBar.setUI(new BasicProgressBarUI());
-        statBar.setValue(3);
         statBar.setForeground(ACCENT_RED);
         statBar.setBorder(BorderFactory.createLineBorder(BORDER));
         statBar.setPreferredSize(new Dimension(950, 16));
@@ -364,8 +377,53 @@ public class FighterCreationView extends JPanel {
     }
 
     private JPanel createBuildActionsPanel() {
-        JPanel panel = new JPanel();
-        panel.setBackground(BACKGROUND);
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 18));
+        panel.setBackground(new Color(0x161616));
+        panel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, BORDER));
+
+        JButton assignButton = new JButton("✓ Assign Selected Attribute");
+        assignButton.setFont(new Font("Arial", Font.BOLD, 18));
+        assignButton.setForeground(TEXT);
+        assignButton.setBackground(ACCENT_RED);
+        assignButton.setOpaque(true);
+        assignButton.setContentAreaFilled(true);
+        assignButton.setBorderPainted(false);
+        assignButton.setFocusPainted(false);
+        Dimension assignButtonSize = new Dimension(290, 50);
+        assignButton.setPreferredSize(assignButtonSize);
+        assignButton.setMinimumSize(assignButtonSize);
+        assignButton.setMaximumSize(assignButtonSize);
+
+        JButton rerollButton = new JButton("↻  Reroll Fighter (X left)");
+        rerollButton.setFont(new Font("Arial", Font.BOLD, 18));
+        rerollButton.setForeground(TEXT);
+        rerollButton.setBackground(PANEL);
+        rerollButton.setOpaque(true);
+        rerollButton.setContentAreaFilled(true);
+        rerollButton.setBorderPainted(false);
+        rerollButton.setFocusPainted(false);
+        Dimension rerollButtonSize = new Dimension(250, 50);
+        rerollButton.setPreferredSize(rerollButtonSize);
+        rerollButton.setMinimumSize(rerollButtonSize);
+        rerollButton.setMaximumSize(rerollButtonSize);
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.setFont(new Font("Arial", Font.BOLD, 18));
+        cancelButton.setForeground(TEXT);
+        cancelButton.setBackground(PANEL);
+        cancelButton.setOpaque(true);
+        cancelButton.setContentAreaFilled(true);
+        cancelButton.setBorderPainted(false);
+        cancelButton.setFocusPainted(false);
+        Dimension cancelButtonSize = new Dimension(170, 50);
+        cancelButton.setPreferredSize(cancelButtonSize);
+        cancelButton.setMinimumSize(cancelButtonSize);
+        cancelButton.setMaximumSize(cancelButtonSize);
+
+        panel.add(assignButton);
+        panel.add(rerollButton);
+        panel.add(cancelButton);
+
         return panel;
     }
 
