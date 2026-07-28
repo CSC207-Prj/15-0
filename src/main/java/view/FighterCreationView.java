@@ -1,9 +1,10 @@
 package view;
 import javax.swing.*;
 import java.awt.*;
+import javax.swing.plaf.basic.BasicProgressBarUI;
 
 public class FighterCreationView extends JPanel {
-    private static final Color BACKGROUND = new Color(0x1E1E1E);
+    private static final Color BACKGROUND = new Color(0x1b1b1b);
     private static final Color PANEL = new Color(0x2B2B2B);
     private static final Color ACCENT_RED = new Color(0xDB3216);
     private static final Color TEXT = new Color(0xF5F5F5);
@@ -67,7 +68,7 @@ public class FighterCreationView extends JPanel {
         attributesFilledLabel.setForeground(ACCENT_RED);
         attributesFilledLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
-        progressBar.setValue(0);
+        progressBar.setValue(3);
 
         panel.add(attributesLabel);
         panel.add(attributesFilledLabel);
@@ -159,7 +160,7 @@ public class FighterCreationView extends JPanel {
     private JPanel createDraftHeaderPanel(){
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(PANEL);
+        panel.setBackground(new Color(0x161616));
         panel.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
 
         JLabel titleLabel = new JLabel("FIGHTER DRAFT");
@@ -179,7 +180,7 @@ public class FighterCreationView extends JPanel {
 
     private JPanel createDraftContentPanel(){
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(PANEL);
+        panel.setBackground(new Color(0x161616));
 
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
@@ -262,12 +263,12 @@ public class FighterCreationView extends JPanel {
 
     private JPanel createFighterHeaderPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(PANEL);
+        panel.setBackground(new Color(0x222222));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
 
         JPanel fighterInfoPanel = new JPanel();
         fighterInfoPanel.setLayout(new BoxLayout(fighterInfoPanel, BoxLayout.Y_AXIS));
-        fighterInfoPanel.setBackground(PANEL);
+        fighterInfoPanel.setBackground(new Color(0x222222));
 
         JLabel nameLabel = new JLabel("Fighter Name");
         nameLabel.setFont(new Font("Arial", Font.BOLD, 40));
@@ -279,7 +280,7 @@ public class FighterCreationView extends JPanel {
 
         JPanel overallPanel = new JPanel();
         overallPanel.setLayout(new BoxLayout(overallPanel, BoxLayout.Y_AXIS));
-        overallPanel.setBackground(PANEL);
+        overallPanel.setBackground(BACKGROUND);
         overallPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDER),
                 BorderFactory.createEmptyBorder(8, 14, 8, 14)));
@@ -311,16 +312,54 @@ public class FighterCreationView extends JPanel {
 
     private JPanel createFighterStatsTablePanel() {
         JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(PANEL);
-        panel.setLayout(new GridLayout(6, 1));
+        panel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, BORDER));
+
+        panel.add(createFighterStatsPanel("STRIKING"));
+        panel.add(createFighterStatsPanel("GRAPPLING"));
+        panel.add(createFighterStatsPanel("WRESTLING"));
+        panel.add(createFighterStatsPanel("CARDIO"));
+        panel.add(createFighterStatsPanel("CHIN"));
+        panel.add(createFighterStatsPanel("FIGHT IQ"));
 
         return panel;
     }
 
-    private JPanel createFighterStatsPanel() {
-        JPanel panel = new JPanel();
-        panel.setBackground(PANEL);
-        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER));
+    private JPanel createFighterStatsPanel(String attributeName) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(BACKGROUND);
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER),
+                BorderFactory.createEmptyBorder(12, 20, 12, 20)));
+
+        JLabel attributeLabel = new JLabel(attributeName);
+        attributeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        attributeLabel.setForeground(TEXT);
+        Dimension attributeSize = new Dimension(150, 30);
+        attributeLabel.setPreferredSize(attributeSize);
+
+        JProgressBar statBar = new JProgressBar(0, 100);
+        statBar.setUI(new BasicProgressBarUI());
+        statBar.setValue(3);
+        statBar.setForeground(ACCENT_RED);
+        statBar.setBorder(BorderFactory.createLineBorder(BORDER));
+        statBar.setPreferredSize(new Dimension(950, 16));
+        statBar.setBackground(new Color(0x3A3A3A));
+        statBar.setOpaque(true);
+
+        JPanel statBarWrapper = new JPanel(new GridBagLayout());
+        statBarWrapper.setBackground(BACKGROUND);
+        statBarWrapper.add(statBar);
+
+        JLabel valueLabel = new JLabel("Value");
+        valueLabel.setForeground(TEXT);
+        valueLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        panel.add(attributeLabel, BorderLayout.WEST);
+        panel.add(statBarWrapper, BorderLayout.CENTER);
+        panel.add(valueLabel, BorderLayout.EAST);
+
         return panel;
     }
 
