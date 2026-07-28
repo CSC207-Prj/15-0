@@ -24,8 +24,6 @@ public class FighterCreationView extends JPanel {
 
         add(createYourFighterPanel(), BorderLayout.WEST);
         add(createFighterDraftPanel(), BorderLayout.CENTER);
-//        add(createRerollsRemainingLabel(), BorderLayout.NORTH);
-
     }
 
     /**
@@ -92,11 +90,11 @@ public class FighterCreationView extends JPanel {
 
         panel.add(createAttributeHeaderPanel());
         panel.add(createAttributePanel("STRIKING"));
-        panel.add(createAttributePanel("GRAPPLING"));
-        panel.add(createAttributePanel("WRESTLING"));
-        panel.add(createAttributePanel("CARDIO"));
-        panel.add(createAttributePanel("CHIN"));
-        panel.add(createAttributePanel("FIGHT IQ"));
+        panel.add(createAttributePanel("STRIKE DEF"));
+        panel.add(createAttributePanel("TAKEDOWNS"));
+        panel.add(createAttributePanel("TD DEFENSE"));
+        panel.add(createAttributePanel("SUBMISSION"));
+        panel.add(createAttributePanel("CONTROL"));
 
         return panel;
     }
@@ -331,11 +329,11 @@ public class FighterCreationView extends JPanel {
         panel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, BORDER));
 
         panel.add(createFighterStatsPanel("STRIKING"));
-        panel.add(createFighterStatsPanel("GRAPPLING"));
-        panel.add(createFighterStatsPanel("WRESTLING"));
-        panel.add(createFighterStatsPanel("CARDIO"));
-        panel.add(createFighterStatsPanel("CHIN"));
-        panel.add(createFighterStatsPanel("FIGHT IQ"));
+        panel.add(createFighterStatsPanel("STRIKE DEF"));
+        panel.add(createFighterStatsPanel("TAKEDOWNS"));
+        panel.add(createFighterStatsPanel("TD DEFENSE"));
+        panel.add(createFighterStatsPanel("SUBMISSION"));
+        panel.add(createFighterStatsPanel("CONTROL"));
 
         return panel;
     }
@@ -355,9 +353,10 @@ public class FighterCreationView extends JPanel {
 
         JProgressBar statBar = new JProgressBar(0, 100);
         statBar.setUI(new BasicProgressBarUI());
+        statBar.setValue(50);
         statBar.setForeground(ACCENT_RED);
         statBar.setBorder(BorderFactory.createLineBorder(BORDER));
-        statBar.setPreferredSize(new Dimension(950, 16));
+        statBar.setPreferredSize(new Dimension(850, 16));
         statBar.setBackground(new Color(0x3A3A3A));
         statBar.setOpaque(true);
 
@@ -426,22 +425,6 @@ public class FighterCreationView extends JPanel {
 
         return panel;
     }
-
-//    // Displays the total number of rerolls the player has prior to spinning (Based on the difficulty selected)
-//    private JLabel createRerollsRemainingLabel() {
-//        JLabel label = new JLabel("Total Rerolls: 3");
-//
-//        label.setFont(new Font("Arial", Font.BOLD, 30));
-//        label.setForeground(TEXT);
-//        label.setBackground(ACCENT_RED);
-//        label.setBorder(BorderFactory.createLineBorder(BORDER));
-//        label.setOpaque(true);
-//        label.setHorizontalAlignment(JLabel.CENTER);
-//
-//        return label;
-//    }
-
-
 
     public static void main(String[] args){
 
