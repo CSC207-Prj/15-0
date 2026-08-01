@@ -1,9 +1,16 @@
 package view;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 
 public class FighterCreationView extends JPanel {
+    private static final String PRE_ROLL = "preRoll";
+    private static final String FIGHTER_CARD = "fighterCard";
+    private final CardLayout draftCardLayout = new CardLayout();
+    private final JPanel draftCards = new JPanel(draftCardLayout);
+    private JPanel footerPanel;
     private static final Color BACKGROUND = new Color(0x1b1b1b);
     private static final Color PANEL = new Color(0x2B2B2B);
     private static final Color ACCENT_RED = new Color(0xDB3216);
@@ -165,7 +172,9 @@ public class FighterCreationView extends JPanel {
         panel.setBackground(PANEL);
         panel.add(createDraftHeaderPanel(), BorderLayout.NORTH);
         panel.add(createDraftContentPanel(), BorderLayout.CENTER);
-        panel.add(createBuildActionsPanel(), BorderLayout.SOUTH);
+        footerPanel = createBuildActionsPanel();
+        footerPanel.setVisible(false);
+        panel.add(footerPanel, BorderLayout.SOUTH);
         return panel;
     }
 
@@ -193,10 +202,12 @@ public class FighterCreationView extends JPanel {
     private JPanel createDraftContentPanel(){
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(0x161616));
-
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        panel.add(createFighterCardPanel(), BorderLayout.CENTER);
+        draftCards.add(createPreRollPanel(), PRE_ROLL);
+        draftCards.add(createFighterCardPanel(), FIGHTER_CARD);
+        panel.add(draftCards, BorderLayout.CENTER);
+        draftCardLayout.show(draftCards, PRE_ROLL);
 
         return panel;
     }
@@ -246,6 +257,14 @@ public class FighterCreationView extends JPanel {
         spinButton.setMinimumSize(buttonSize);
         spinButton.setMaximumSize(buttonSize);
         spinButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        spinButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                draftCardLayout.show(draftCards, FIGHTER_CARD);
+                footerPanel.setVisible(true);
+            }
+        });
 
         panel.add(Box.createVerticalGlue());
         panel.add(iconLabel);
@@ -357,6 +376,7 @@ public class FighterCreationView extends JPanel {
         statBar.setForeground(ACCENT_RED);
         statBar.setBorder(BorderFactory.createLineBorder(BORDER));
         statBar.setPreferredSize(new Dimension(850, 16));
+        statBar.setMinimumSize(new Dimension(500, 16));
         statBar.setBackground(new Color(0x3A3A3A));
         statBar.setOpaque(true);
 
