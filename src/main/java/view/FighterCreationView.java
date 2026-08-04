@@ -4,13 +4,27 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.plaf.basic.BasicProgressBarUI;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FighterCreationView extends JPanel {
+    private JLabel fighterNameLabel;
+    private JLabel fighterDetailsLabel;
+    private JLabel overallValueLabel;
+    private final Map<String, JProgressBar> fighterStatBars = new HashMap<>();
+    private final Map<String, JLabel> fighterStatValueLabels = new HashMap<>();
+    private final Map<String, JLabel> attributeValueLabels = new HashMap<>();
+    private final Map<String, JLabel> attributeSourceLabels = new HashMap<>();
     private static final String PRE_ROLL = "preRoll";
     private static final String FIGHTER_CARD = "fighterCard";
     private final CardLayout draftCardLayout = new CardLayout();
     private final JPanel draftCards = new JPanel(draftCardLayout);
     private JPanel footerPanel;
+    private JPanel selectedStatRow;
+    private String selectedAttribute;
+    private JButton assignButton;
+    private JButton rerollButton;
+    private JButton cancelButton;
     private static final Color BACKGROUND = new Color(0x1b1b1b);
     private static final Color PANEL = new Color(0x2B2B2B);
     private static final Color ACCENT_RED = new Color(0xDB3216);
@@ -148,6 +162,8 @@ public class FighterCreationView extends JPanel {
         attributeLabel.setForeground(SUBTEXT);
         valueLabel.setForeground(SUBTEXT);
         sourceFighterLabel.setForeground(SUBTEXT);
+        attributeValueLabels.put(attributeName, valueLabel);
+        attributeSourceLabels.put(attributeName, sourceFighterLabel);
 
         attributeLabel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         valueLabel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
@@ -261,8 +277,7 @@ public class FighterCreationView extends JPanel {
         spinButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                draftCardLayout.show(draftCards, FIGHTER_CARD);
-                footerPanel.setVisible(true);
+                showFighterCard();
             }
         });
 
@@ -301,13 +316,13 @@ public class FighterCreationView extends JPanel {
         fighterInfoPanel.setLayout(new BoxLayout(fighterInfoPanel, BoxLayout.Y_AXIS));
         fighterInfoPanel.setBackground(new Color(0x222222));
 
-        JLabel nameLabel = new JLabel("Fighter Name");
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 40));
-        nameLabel.setForeground(TEXT);
+        fighterNameLabel = new JLabel("Fighter Name");
+        fighterNameLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        fighterNameLabel.setForeground(TEXT);
 
-        JLabel detailsLabel = new JLabel("Record • Weight");
-        detailsLabel.setFont(new Font("Arial", Font.PLAIN, 30));
-        detailsLabel.setForeground(SUBTEXT);
+        fighterDetailsLabel = new JLabel("Record • Weight");
+        fighterDetailsLabel.setFont(new Font("Arial", Font.PLAIN, 30));
+        fighterDetailsLabel.setForeground(SUBTEXT);
 
         JPanel overallPanel = new JPanel();
         overallPanel.setLayout(new BoxLayout(overallPanel, BoxLayout.Y_AXIS));
@@ -321,14 +336,14 @@ public class FighterCreationView extends JPanel {
         overallTitleLabel.setForeground(SUBTEXT);
         overallTitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel overallValueLabel = new JLabel("Value");
+        overallValueLabel = new JLabel("Value");
         overallValueLabel.setFont(new Font("Segoe UI", Font.BOLD, 40));
         overallValueLabel.setForeground(ACCENT_RED);
         overallValueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        fighterInfoPanel.add(nameLabel);
+        fighterInfoPanel.add(fighterNameLabel);
         fighterInfoPanel.add(Box.createVerticalStrut(8));
-        fighterInfoPanel.add(detailsLabel);
+        fighterInfoPanel.add(fighterDetailsLabel);
 
         overallPanel.add(Box.createVerticalGlue());
         overallPanel.add(overallTitleLabel);
@@ -388,6 +403,17 @@ public class FighterCreationView extends JPanel {
         valueLabel.setForeground(TEXT);
         valueLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
+        fighterStatBars.put(attributeName, statBar);
+        fighterStatValueLabels.put(attributeName, valueLabel);
+
+        panel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent event) {
+                selectedAttribute = attributeName;
+                selectStatRow(panel);
+            }
+        });
+
         panel.add(attributeLabel, BorderLayout.WEST);
         panel.add(statBarWrapper, BorderLayout.CENTER);
         panel.add(valueLabel, BorderLayout.EAST);
@@ -395,12 +421,29 @@ public class FighterCreationView extends JPanel {
         return panel;
     }
 
+    private void selectStatRow(JPanel row) {
+        if (selectedStatRow != null) {
+            selectedStatRow.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER),
+                    BorderFactory.createEmptyBorder(12, 20, 12, 20)));
+        }
+
+        selectedStatRow = row;
+
+        selectedStatRow.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(ACCENT_RED, 2),
+                BorderFactory.createEmptyBorder(10, 18, 10, 18)));
+        assignButton.setEnabled(true);
+        repaint();
+    }
+
     private JPanel createBuildActionsPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 18));
         panel.setBackground(new Color(0x161616));
         panel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, BORDER));
 
-        JButton assignButton = new JButton("✓ Assign Selected Attribute");
+        assignButton = new JButton("✓ Assign Selected Attribute");
+        assignButton.setEnabled(false);
         assignButton.setFont(new Font("Arial", Font.BOLD, 18));
         assignButton.setForeground(TEXT);
         assignButton.setBackground(ACCENT_RED);
@@ -412,8 +455,14 @@ public class FighterCreationView extends JPanel {
         assignButton.setPreferredSize(assignButtonSize);
         assignButton.setMinimumSize(assignButtonSize);
         assignButton.setMaximumSize(assignButtonSize);
+        assignButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Clicked Assign: " + selectedAttribute);
+            }
+        });
 
-        JButton rerollButton = new JButton("↻  Reroll Fighter (X left)");
+        rerollButton = new JButton("↻  Reroll Fighter (X left)");
         rerollButton.setFont(new Font("Arial", Font.BOLD, 18));
         rerollButton.setForeground(TEXT);
         rerollButton.setBackground(PANEL);
@@ -425,8 +474,14 @@ public class FighterCreationView extends JPanel {
         rerollButton.setPreferredSize(rerollButtonSize);
         rerollButton.setMinimumSize(rerollButtonSize);
         rerollButton.setMaximumSize(rerollButtonSize);
+        rerollButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Clicked Reroll");
+            }
+        });
 
-        JButton cancelButton = new JButton("Cancel");
+        cancelButton = new JButton("Cancel");
         cancelButton.setFont(new Font("Arial", Font.BOLD, 18));
         cancelButton.setForeground(TEXT);
         cancelButton.setBackground(PANEL);
@@ -438,12 +493,50 @@ public class FighterCreationView extends JPanel {
         cancelButton.setPreferredSize(cancelButtonSize);
         cancelButton.setMinimumSize(cancelButtonSize);
         cancelButton.setMaximumSize(cancelButtonSize);
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Clicked Cancel");
+            }
+        });
 
         panel.add(assignButton);
         panel.add(rerollButton);
         panel.add(cancelButton);
 
         return panel;
+    }
+
+    public void setFighterName(String name) {
+        fighterNameLabel.setText(name);
+    }
+
+    public void setFighterDetails(String details) {
+        fighterDetailsLabel.setText(details);
+    }
+
+    public void setOverall(int overall) {
+        overallValueLabel.setText(String.valueOf(overall));
+    }
+
+    public void setStat(String attribute, int value) {
+        fighterStatBars.get(attribute).setValue(value);
+        fighterStatValueLabels.get(attribute).setText(String.valueOf(value));
+    }
+
+    public void assignAttribute(String attribute, int value, String fighterName) {
+        attributeValueLabels.get(attribute).setText(String.valueOf(value));
+        attributeSourceLabels.get(attribute).setText(fighterName);
+    }
+
+    public void showPreRoll() {
+        draftCardLayout.show(draftCards, PRE_ROLL);
+        footerPanel.setVisible(false);
+    }
+
+    public void showFighterCard() {
+        draftCardLayout.show(draftCards, FIGHTER_CARD);
+        footerPanel.setVisible(true);
     }
 
     public static void main(String[] args){
