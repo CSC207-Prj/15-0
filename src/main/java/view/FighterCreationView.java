@@ -4,10 +4,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.plaf.basic.BasicProgressBarUI;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
+import interface_adapter.fighter_creation.FighterCreationViewModel;
+import java.beans.PropertyChangeEvent;
 
-public class FighterCreationView extends JPanel {
+public class FighterCreationView extends JPanel implements PropertyChangeListener {
+    private final FighterCreationViewModel viewModel;
     private JLabel fighterNameLabel;
     private JLabel fighterDetailsLabel;
     private JLabel overallValueLabel;
@@ -36,7 +40,9 @@ public class FighterCreationView extends JPanel {
     private final JProgressBar progressBar;
 
 
-    public FighterCreationView() {
+    public FighterCreationView(FighterCreationViewModel viewModel) {
+        this.viewModel = viewModel;
+        this.viewModel.addPropertyChangeListener(this);
         setLayout(new BorderLayout());
         setBackground(BACKGROUND);
 
@@ -45,6 +51,46 @@ public class FighterCreationView extends JPanel {
 
         add(createYourFighterPanel(), BorderLayout.WEST);
         add(createFighterDraftPanel(), BorderLayout.CENTER);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent event) {
+        if (FighterCreationViewModel.STATE_PROPERTY.equals(event.getPropertyName())) {
+            setFighterName(viewModel.getFighterName());
+            setFighterDetails(viewModel.getFighterDetails());
+            setOverall(viewModel.getOverall());
+
+            for (Map.Entry<String, Integer> entry : viewModel.getFighterStats().entrySet()) {
+                setStat(entry.getKey(), entry.getValue());
+            }
+
+            for (String attribute : attributeValueLabels.keySet()) {
+                Integer value = viewModel.getAssignedValues().get(attribute);
+                String fighterName = viewModel.getAssignedFighters().get(attribute);
+
+                if (value != null) {
+                    assignAttribute(attribute, value, fighterName);
+                }
+                else {
+                    attributeValueLabels.get(attribute).setText("—");
+                    attributeSourceLabels.get(attribute).setText("Not Assigned");
+                }
+            }
+
+            int attributesFilled = viewModel.getAttributesFilled();
+            attributesFilledLabel.setText(attributesFilled + " / 6");
+            progressBar.setValue(attributesFilled);
+
+            rerollButton.setText(
+                    "↻  Reroll Fighter (" + viewModel.getRerollsLeft() + " left)");
+
+            if (viewModel.isFighterRevealed()) {
+                showFighterCard();
+            }
+            else {
+                showPreRoll();
+            }
+        }
     }
 
     /**
@@ -544,7 +590,8 @@ public class FighterCreationView extends JPanel {
         JFrame frame = new JFrame("Fighter Creation Preview");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setContentPane(new FighterCreationView());
+        FighterCreationViewModel viewModel = new FighterCreationViewModel();
+        frame.setContentPane(new FighterCreationView(viewModel));
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 
