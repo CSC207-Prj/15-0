@@ -3,11 +3,11 @@ package entity;
 /** The six core gameplay attributes shared by real and custom fighters. */
 public enum Attribute {
     STRIKING("Striking"),
-    GRAPPLING("Grappling"),
+    DEFENSE("Defense"),
     TAKEDOWNS("Takedowns"),
-    TAKEDOWN_DEFENSE("Takedown Defense"),
-    CARDIO("Cardio"),
-    DURABILITY("Durability");
+    HEIGHT("Height"),
+    REACH("Reach"),
+    CARDIO("Cardio");
 
     private final String displayName;
 
