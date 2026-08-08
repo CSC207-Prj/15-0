@@ -1,6 +1,5 @@
 package app;
 
-import interface_adapter.fighter_creation.FighterCreationViewModel;
 import view.FighterCreationView;
 
 import javax.swing.JFrame;
@@ -13,17 +12,29 @@ public class AppBuilder {
     private FighterCreationView fighterCreationView;
 
     public AppBuilder addFighterCreationView() {
-        FighterCreationViewModel viewModel =
-                new FighterCreationViewModel();
+        final Runnable backAction = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Back to Settings");
+            }
+        };
+
+        final Runnable continueAction = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Continue");
+            }
+        };
 
         fighterCreationView =
-                new FighterCreationView(viewModel);
+                new FighterCreationView(backAction, continueAction);
 
         return this;
     }
 
     public JFrame build() {
-        JFrame application = new JFrame("UFC Build-A-Fighter");
+        final JFrame application =
+                new JFrame("UFC Build-A-Fighter");
 
         application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         application.setContentPane(fighterCreationView);

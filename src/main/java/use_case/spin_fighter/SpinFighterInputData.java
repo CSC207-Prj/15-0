@@ -1,17 +1,19 @@
 package use_case.spin_fighter;
 
+import entity.UfcEra;
+
 /**
- * Input data for spinning a fighter.
+ * Input data for the Spin Fighter use case.
  */
 public class SpinFighterInputData {
 
-    private final String era;
+    private final UfcEra era;
 
-    public SpinFighterInputData(String era) {
+    public SpinFighterInputData(UfcEra era) {
         this.era = era;
     }
 
-    public String getEra() {
+    public UfcEra getEra() {
         return era;
     }
 }
