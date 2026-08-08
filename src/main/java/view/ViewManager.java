@@ -8,12 +8,13 @@ import java.awt.CardLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-/** Minimal CardLayout infrastructure. Finished screens are added in Stage 2. */
+/** Shared CardLayout navigation adapter.*/
 public final class ViewManager extends JPanel implements PropertyChangeListener {
     private final CardLayout cardLayout = new CardLayout();
 
     public ViewManager(ViewManagerModel model) {
         setLayout(cardLayout);
+        setBackground(UfcTheme.BACKGROUND);
         model.addPropertyChangeListener(this);
     }
 
