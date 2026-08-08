@@ -4,10 +4,16 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 
-/** Shared observable model base used by Swing-facing state in later stages. */
+/**
+ * Base class for observable view models.
+ */
 public abstract class ViewModel {
+
+    public static final String STATE_PROPERTY = "state";
+
     private final String viewName;
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport support =
+            new PropertyChangeSupport(this);
 
     protected ViewModel(String viewName) {
         this.viewName = Objects.requireNonNull(viewName, "viewName");
@@ -22,6 +28,6 @@ public abstract class ViewModel {
     }
 
     protected void firePropertyChanged(Object oldValue, Object newValue) {
-        support.firePropertyChange("state", oldValue, newValue);
+        support.firePropertyChange(STATE_PROPERTY, oldValue, newValue);
     }
 }
