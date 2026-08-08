@@ -2,7 +2,7 @@ package interface_adapter;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class ConfirmViewModel{ //extends Viewmodel<Confirm>{
+public class ConfirmViewModel extends Viewmodel{
     public static final String VIEW_NAME = "Confirm Fighter";
     public static final String TITLE_LABEL = "Finalize Your Fighter";
     public static final String FIGHTER_NAME_LABEL = "FIghter Name: ";
