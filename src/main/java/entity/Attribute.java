@@ -1,6 +1,8 @@
 package entity;
 
-/** The six core gameplay attributes shared by real and custom fighters. */
+/**
+ * The six attributes used to build a fighter.
+ */
 public enum Attribute {
     STRIKING("Striking"),
     DEFENSE("Defense"),
@@ -16,6 +18,11 @@ public enum Attribute {
     }
 
     public String getDisplayName() {
+        return displayName;
+    }
+
+    @Override
+    public String toString() {
         return displayName;
     }
 }
