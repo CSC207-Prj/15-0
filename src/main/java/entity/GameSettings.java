@@ -1,11 +1,5 @@
 package entity;
 
-/**
- * Stores the settings for one run.
- *
- * It deliberately does not contain Swing code. This object should still make
- * sense even if the project later changes the UI.
- */
 public class GameSettings {
     private final Difficulty difficulty;
     private final Integer roundsPerFight;
