@@ -1,20 +1,19 @@
 package interface_adapter.fighter_creation;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import interface_adapter.ViewModel;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Stores the data displayed by the fighter creation view and notifies
- * the view when that data changes.
+ * Stores the data displayed by the fighter creation view.
  */
-public class FighterCreationViewModel {
+public class FighterCreationViewModel extends ViewModel {
 
-    public static final String STATE_PROPERTY = "state";
-
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+    public FighterCreationViewModel() {
+        super("Fighter Creation");
+    }
 
     private String fighterName = "";
     private String fighterDetails = "";
@@ -27,7 +26,8 @@ public class FighterCreationViewModel {
     private int rerollsLeft;
     private boolean fighterRevealed;
 
-    public void setRolledFighter(String name, String details, int overall, Map<String, Integer> stats) {
+    public void setRolledFighter(String name, String details,
+                                 int overall, Map<String, Integer> stats) {
         this.fighterName = name;
         this.fighterDetails = details;
         this.overall = overall;
@@ -36,18 +36,19 @@ public class FighterCreationViewModel {
         fighterStats.putAll(stats);
 
         fighterRevealed = true;
-        firePropertyChanged();
+        firePropertyChanged(null, this);
     }
 
-    public void setAssignedAttribute(String attribute, int value, String fighterName) {
+    public void setAssignedAttribute(String attribute, int value,
+                                     String fighterName) {
         assignedValues.put(attribute, value);
         assignedFighters.put(attribute, fighterName);
-        firePropertyChanged();
+        firePropertyChanged(null, this);
     }
 
     public void setRerollsLeft(int rerollsLeft) {
         this.rerollsLeft = rerollsLeft;
-        firePropertyChanged();
+        firePropertyChanged(null, this);
     }
 
     public String getFighterName() {
@@ -84,13 +85,5 @@ public class FighterCreationViewModel {
 
     public boolean isFighterRevealed() {
         return fighterRevealed;
-    }
-
-    public void firePropertyChanged() {
-        support.firePropertyChange(STATE_PROPERTY, null, this);
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        support.addPropertyChangeListener(listener);
     }
 }
