@@ -52,20 +52,30 @@ public class ConfirmInteractor implements ConfirmInputBoundary{
 
     }
     private boolean validAttributes(ConfirmInputData inputData) {
-        if (inputData == null ||inputData.getAttributePoints() == null || inputData.getAttributePoints().size() != ATTRIBUTE_COUNT) {
+        if (inputData == null || inputData.getAttributePoints() == null || inputData.getAttributePoints().size() != ATTRIBUTE_COUNT) {
             outputboundary.prepareFailureView("All 6 values must be assigned");
             return false;
         }
-        for(String attribute: inputData.getAttributePoints()) {
-            final int value = Integer.parseInt(attribute);
-            if (attribute.isEmpty() || value < ATTRIBUTE_MIN|| value > ATTRIBUTE_MAX) {
-                outputboundary.prepareFailureView("Attribute Invalid");
+        for (String attribute : inputData.getAttributePoints()) {
+            if (attribute == null || attribute.trim().isEmpty() ||"TBD".equalsIgnoreCase(attribute)) {
+                outputboundary.prepareFailureView("All 6 values must be assigned");
+                return false;
+            }
+            try {
+                final int value = Integer.parseInt(attribute.trim());
+                if (value < ATTRIBUTE_MIN || value > ATTRIBUTE_MAX) {
+                    outputboundary.prepareFailureView("Attributes must be between 0 and 100");
+                    return false;
+                }
+            }
+            catch (NumberFormatException exception) {
+                outputboundary.prepareFailureView("Attribute values must be numbers");
                 return false;
             }
         }
+
         return true;
     }
-
     private int calculateOverall(List<String> attributePoints, String weightClass) {
         List<Double> weights = getWeights(weightClass);
         double totalWeight = 0;
@@ -90,7 +100,7 @@ public class ConfirmInteractor implements ConfirmInputBoundary{
             case "Middleweight":
                 return MIDDLEWEIGHT_WEIGHTS;
             case "Heavyweight":
-            case "light Heavyweight":
+            case "Light Heavyweight":
                 return HEAVY_WEIGHTS;
             default:
                 throw new IllegalArgumentException("Invalid weight classes");
