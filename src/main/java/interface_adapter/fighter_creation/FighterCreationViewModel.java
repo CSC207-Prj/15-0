@@ -5,6 +5,7 @@ import interface_adapter.ViewModel;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import entity.RealFighter;
 
 /**
  * Stores the data displayed by the fighter creation view.
@@ -18,6 +19,8 @@ public class FighterCreationViewModel extends ViewModel {
     private String fighterName = "";
     private String fighterDetails = "";
     private int overall;
+    private RealFighter currentFighter;
+    private String errorMessage = "";
 
     private final Map<String, Integer> fighterStats = new HashMap<>();
     private final Map<String, Integer> assignedValues = new HashMap<>();
@@ -38,8 +41,7 @@ public class FighterCreationViewModel extends ViewModel {
         firePropertyChanged(null, this);
     }
 
-    public void setAssignedAttribute(String attribute, int value,
-                                     String fighterName) {
+    public void setAssignedAttribute(String attribute, int value, String fighterName) {
         assignedValues.put(attribute, value);
         assignedFighters.put(attribute, fighterName);
         firePropertyChanged(null, this);
@@ -48,6 +50,14 @@ public class FighterCreationViewModel extends ViewModel {
     public void setRerollsLeft(int rerollsLeft) {
         this.rerollsLeft = rerollsLeft;
         firePropertyChanged(null, this);
+    }
+
+    public RealFighter getCurrentFighter() {
+        return currentFighter;
+    }
+
+    public void setCurrentFighter(RealFighter currentFighter) {
+        this.currentFighter = currentFighter;
     }
 
     public String getFighterName() {
@@ -94,6 +104,15 @@ public class FighterCreationViewModel extends ViewModel {
         fighterStats.putAll(stats);
 
         fighterRevealed = true;
+        firePropertyChanged(null, this);
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
         firePropertyChanged(null, this);
     }
 }

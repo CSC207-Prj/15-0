@@ -22,4 +22,8 @@ public final class CustomFighter extends Fighter {
                          Map<Attribute, Double> attributes) {
         super(name, weightClass, record, attributes);
     }
+
+    public void assignAttribute(Attribute attribute, double value) {
+        setAttribute(attribute, value);
+    }
 }
