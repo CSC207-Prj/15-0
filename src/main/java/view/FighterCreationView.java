@@ -29,22 +29,8 @@ public final class FighterCreationView extends JPanel {
 
     private Attribute selectedAttribute;
     private JPanel selectedRow;
-    private final SpinFighterController spinFighterController;
-    private final RerollFighterController rerollFighterController;
-    private final AssignAttributeController assignAttributeController;
-    private final FighterCreationViewModel viewModel;
 
-    public FighterCreationView(SpinFighterController spinFighterController,
-        RerollFighterController rerollFighterController,
-        AssignAttributeController assignAttributeController,
-        FighterCreationViewModel viewModel,
-        Runnable backAction,
-        Runnable continueAction) {
-
-        this.spinFighterController = spinFighterController;
-        this.rerollFighterController = rerollFighterController;
-        this.assignAttributeController = assignAttributeController;
-        this.viewModel = viewModel;
+    public FighterCreationView(Runnable backAction, Runnable continueAction) {
         setLayout(new BorderLayout());
         setBackground(UfcTheme.BACKGROUND);
 

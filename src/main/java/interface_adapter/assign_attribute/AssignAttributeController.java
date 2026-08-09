@@ -3,6 +3,7 @@ package interface_adapter.fighter_creation;
 import entity.Attribute;
 import entity.CustomFighter;
 import entity.RealFighter;
+import entity.UfcEra;
 import use_case.assign_attribute.AssignAttributeInputBoundary;
 import use_case.assign_attribute.AssignAttributeInputData;
 
@@ -17,8 +18,9 @@ public class AssignAttributeController {
         this.interactor = interactor;
     }
 
-    public void execute(CustomFighter customFighter, RealFighter realFighter, Attribute attribute) {
-        final AssignAttributeInputData inputData = new AssignAttributeInputData(customFighter, realFighter, attribute);
+    public void execute(CustomFighter customFighter, RealFighter realFighter, Attribute attribute, UfcEra era) {
+        final AssignAttributeInputData inputData =
+                new AssignAttributeInputData(customFighter, realFighter, attribute, era);
 
         interactor.execute(inputData);
     }
