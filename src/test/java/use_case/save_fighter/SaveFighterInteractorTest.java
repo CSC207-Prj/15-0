@@ -1,5 +1,6 @@
 package use_case.save_fighter;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -12,6 +13,8 @@ import static org.junit.Assert.fail;
 
 import entity.Attribute;
 import entity.CustomFighter;
+import entity.FighterRecord;
+import entity.WeightClass;
 
 public class SaveFighterInteractorTest {
 
@@ -33,12 +36,16 @@ public class SaveFighterInteractorTest {
         }
     }
 
-    private static CustomFighter completeFighter(String name) {
-        final CustomFighter fighter = new CustomFighter(name, "Lightweight");
+    private static Map<Attribute, Double> allAttributes(double value) {
+        final Map<Attribute, Double> attributes = new EnumMap<>(Attribute.class);
         for (Attribute attribute : Attribute.values()) {
-            fighter.setAttribute(attribute, 80.0);
+            attributes.put(attribute, value);
         }
-        return fighter;
+        return attributes;
+    }
+
+    private static CustomFighter completeFighter(String name) {
+        return new CustomFighter(name, WeightClass.LIGHTWEIGHT, new FighterRecord(), allAttributes(80.0));
     }
 
     @Test
@@ -64,7 +71,7 @@ public class SaveFighterInteractorTest {
     }
 
     @Test
-    public void failsWhenNameIsBlank() {
+    public void failsWhenThereIsNoFighter() {
         final FakeRoster roster = new FakeRoster();
 
         final SaveFighterOutputBoundary presenter = new SaveFighterOutputBoundary() {
@@ -75,19 +82,19 @@ public class SaveFighterInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-                assertEquals("Your fighter needs a name before it can be saved.", errorMessage);
+                assertEquals("There is no fighter to save.", errorMessage);
             }
         };
 
         final SaveFighterInteractor interactor = new SaveFighterInteractor(roster, presenter);
-        interactor.execute(new SaveFighterInputData(completeFighter("   ")));
+        interactor.execute(new SaveFighterInputData(null));
     }
 
     @Test
     public void failsWhenAttributesAreIncomplete() {
         final FakeRoster roster = new FakeRoster();
-        final CustomFighter unfinished = new CustomFighter("Halfway", "Welterweight");
-        unfinished.setAttribute(Attribute.STRIKING, 90.0);
+        final CustomFighter unfinished = new CustomFighter("Halfway", WeightClass.WELTERWEIGHT,
+                new FighterRecord(), Map.of(Attribute.STRIKING, 90.0));
 
         final SaveFighterOutputBoundary presenter = new SaveFighterOutputBoundary() {
             @Override
