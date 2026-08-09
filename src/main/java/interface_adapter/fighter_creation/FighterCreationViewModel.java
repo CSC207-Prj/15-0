@@ -26,8 +26,7 @@ public class FighterCreationViewModel extends ViewModel {
     private int rerollsLeft;
     private boolean fighterRevealed;
 
-    public void setRolledFighter(String name, String details,
-                                 int overall, Map<String, Integer> stats) {
+    public void setRolledFighter(String name, String details, int overall, Map<String, Integer> stats) {
         this.fighterName = name;
         this.fighterDetails = details;
         this.overall = overall;
@@ -85,5 +84,16 @@ public class FighterCreationViewModel extends ViewModel {
 
     public boolean isFighterRevealed() {
         return fighterRevealed;
+    }
+
+    public void setRolledFighter(String name, String details, Map<String, Integer> stats) {
+        this.fighterName = name;
+        this.fighterDetails = details;
+
+        fighterStats.clear();
+        fighterStats.putAll(stats);
+
+        fighterRevealed = true;
+        firePropertyChanged(null, this);
     }
 }
