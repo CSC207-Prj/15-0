@@ -3,6 +3,8 @@ package use_case.assign_attribute;
 import entity.Attribute;
 import entity.CustomFighter;
 import entity.RealFighter;
+import use_case.spin_fighter.SpinFighterInputBoundary;
+import use_case.spin_fighter.SpinFighterInputData;
 
 /**
  * Interactor for the Assign Attribute use case.
@@ -10,9 +12,12 @@ import entity.RealFighter;
 public class AssignAttributeInteractor implements AssignAttributeInputBoundary {
 
     private final AssignAttributeOutputBoundary presenter;
+    private final SpinFighterInputBoundary spinFighterInteractor;
 
-    public AssignAttributeInteractor(AssignAttributeOutputBoundary presenter) {
+    public AssignAttributeInteractor(AssignAttributeOutputBoundary presenter,
+                                     SpinFighterInputBoundary spinFighterInteractor) {
         this.presenter = presenter;
+        this.spinFighterInteractor = spinFighterInteractor;
     }
 
     @Override
@@ -33,5 +38,9 @@ public class AssignAttributeInteractor implements AssignAttributeInputBoundary {
         final AssignAttributeOutputData outputData = new AssignAttributeOutputData(attribute, value, realFighter.getName());
 
         presenter.prepareSuccessView(outputData);
+
+        if (!customFighter.hasAllAttributes()) {
+            spinFighterInteractor.execute(new SpinFighterInputData(inputData.getEra()));
+        }
     }
 }
