@@ -6,7 +6,7 @@ import use_case.game_setting.GameSettingBoundary;
 import use_case.game_setting.GameSettingInputData;
 
 /**
- * Reads values supplied by the view and sends them to the use case.git 
+ * Reads values supplied by the view and sends them to the use case.git
  */
 public class GameSettingController {
     private final GameSettingBoundary gameSettingInteractor;

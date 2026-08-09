@@ -11,7 +11,6 @@ import java.util.List;
 
 /**
  * Interactor for configuring a new game run.
- *
  * Responsibilities:
  * 1. Create and validate GameSettings.
  * 2. Get all real fighters from the project's existing data source.
