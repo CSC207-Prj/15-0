@@ -20,6 +20,7 @@ public class FighterCreationViewModel extends ViewModel {
     private String fighterDetails = "";
     private int overall;
     private RealFighter currentFighter;
+    private String errorMessage = "";
 
     private final Map<String, Integer> fighterStats = new HashMap<>();
     private final Map<String, Integer> assignedValues = new HashMap<>();
@@ -40,8 +41,7 @@ public class FighterCreationViewModel extends ViewModel {
         firePropertyChanged(null, this);
     }
 
-    public void setAssignedAttribute(String attribute, int value,
-                                     String fighterName) {
+    public void setAssignedAttribute(String attribute, int value, String fighterName) {
         assignedValues.put(attribute, value);
         assignedFighters.put(attribute, fighterName);
         firePropertyChanged(null, this);
@@ -104,6 +104,15 @@ public class FighterCreationViewModel extends ViewModel {
         fighterStats.putAll(stats);
 
         fighterRevealed = true;
+        firePropertyChanged(null, this);
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
         firePropertyChanged(null, this);
     }
 }
