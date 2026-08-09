@@ -2,6 +2,7 @@ package view;
 
 import entity.Difficulty;
 import entity.UfcEra;
+import interface_adapter.game_setting.GameSettingController;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -9,8 +10,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -18,9 +17,28 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-/** User story 1 view. Stage 2 shows controls but contains no configuration use-case logic. */
+/**
+ * View for configuring a new game run.
+ */
 public final class GameSettingsView extends JPanel {
-    public GameSettingsView(Runnable backAction, Runnable continueAction) {
+
+    private final GameSettingController controller;
+    private final Runnable backAction;
+    private final Runnable continueAction;
+
+    private final JComboBox<Difficulty> difficultyBox;
+    private final JComboBox<Integer> roundsBox;
+    private final JComboBox<UfcEra> eraBox;
+    private final JCheckBox hideStatsBox;
+
+    public GameSettingsView(GameSettingController controller,
+                            Runnable backAction,
+                            Runnable continueAction) {
+
+        this.controller = controller;
+        this.backAction = backAction;
+        this.continueAction = continueAction;
+
         setLayout(new BorderLayout());
         setBackground(UfcTheme.BACKGROUND);
 
@@ -28,16 +46,20 @@ public final class GameSettingsView extends JPanel {
         header.setBackground(UfcTheme.HEADER);
         header.setBorder(BorderFactory.createEmptyBorder(22, 32, 22, 32));
         header.add(UfcTheme.title("GAME SETTINGS"), BorderLayout.WEST);
-        header.add(UfcTheme.body("Shape the fighter pool and gauntlet rules"), BorderLayout.EAST);
-        add(header, BorderLayout.NORTH);
+        header.add(
+                UfcTheme.body("Shape the fighter pool and gauntlet rules"),
+                BorderLayout.EAST
+        );
 
-        final JComboBox<Difficulty> difficultyBox = UfcTheme.comboBox(Difficulty.values());
+        add(header, BorderLayout.NORTH);
+        difficultyBox = UfcTheme.comboBox(Difficulty.values());
         difficultyBox.setSelectedItem(Difficulty.NORMAL);
-        final JSpinner roundsSpinner = new JSpinner(new SpinnerNumberModel(3, 1, 5, 1));
-        roundsSpinner.setFont(UfcTheme.BODY);
-        final JComboBox<UfcEra> eraBox = UfcTheme.comboBox(UfcEra.values());
+        roundsBox = UfcTheme.comboBox(new Integer[]{1, 3, 5});
+        roundsBox.setSelectedItem(3);
+        eraBox = UfcTheme.comboBox(UfcEra.values());
         eraBox.setSelectedItem(UfcEra.ALL_TIME);
-        final JCheckBox hideStatsBox = new JCheckBox("Hide opponent ratings during the gauntlet");
+        hideStatsBox =
+                new JCheckBox("Hide opponent ratings during the gauntlet");
         hideStatsBox.setFont(UfcTheme.BODY);
         hideStatsBox.setForeground(UfcTheme.TEXT);
         hideStatsBox.setBackground(UfcTheme.PANEL);
@@ -65,7 +87,7 @@ public final class GameSettingsView extends JPanel {
         card.add(fieldTitle("ROUNDS PER FIGHT"), gbc);
         gbc.gridy++;
         gbc.insets = new Insets(4, 16, 14, 16);
-        card.add(roundsSpinner, gbc);
+        card.add(roundsBox, gbc);
         gbc.gridy++;
         gbc.insets = new Insets(12, 16, 4, 16);
         card.add(fieldTitle("UFC ERA"), gbc);
@@ -74,21 +96,47 @@ public final class GameSettingsView extends JPanel {
         card.add(eraBox, gbc);
         gbc.gridy++;
         gbc.insets = new Insets(0, 16, 18, 16);
-        card.add(UfcTheme.body("The selected era will filter the real-fighter pool when Stage 3/4 logic is connected."), gbc);
+        card.add(
+                UfcTheme.body(
+                        "Only fighters from the selected era can appear on the attribute wheel."
+                ),
+                gbc
+        );
+
         gbc.gridy++;
         card.add(hideStatsBox, gbc);
-        gbc.gridy++;
-        card.add(UfcTheme.body("Preview only — settings are not submitted in Stage 2."), gbc);
-
         wrapper.add(card);
         add(wrapper, BorderLayout.CENTER);
 
-        final JPanel actions = UfcTheme.panel(new FlowLayout(FlowLayout.CENTER, 18, 18));
+        final JPanel actions =
+                UfcTheme.panel(new FlowLayout(FlowLayout.CENTER, 18, 18));
         actions.setBackground(UfcTheme.HEADER);
         final JButton back = UfcTheme.secondaryButton("Back");
         final JButton start = UfcTheme.primaryButton("Create Fighter");
         back.addActionListener(event -> backAction.run());
-        start.addActionListener(event -> continueAction.run());
+
+        start.addActionListener(event -> {
+            final Difficulty difficulty =
+                    (Difficulty) difficultyBox.getSelectedItem();
+
+            final Integer rounds =
+                    (Integer) roundsBox.getSelectedItem();
+
+            final UfcEra era =
+                    (UfcEra) eraBox.getSelectedItem();
+
+            final boolean hideStats =
+                    hideStatsBox.isSelected();
+
+            controller.execute(
+                    difficulty,
+                    rounds,
+                    era,
+                    hideStats
+            );
+            continueAction.run();
+        });
+
         actions.add(back);
         actions.add(start);
         add(actions, BorderLayout.SOUTH);

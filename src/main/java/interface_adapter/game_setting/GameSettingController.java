@@ -6,9 +6,10 @@ import use_case.game_setting.GameSettingBoundary;
 import use_case.game_setting.GameSettingInputData;
 
 /**
- * Reads values supplied by the view and sends them to the use case.git
+ * Converts values from GameSettingsView into input data for the use case.
  */
 public class GameSettingController {
+
     private final GameSettingBoundary gameSettingInteractor;
 
     public GameSettingController(GameSettingBoundary gameSettingInteractor) {
@@ -20,12 +21,13 @@ public class GameSettingController {
                         UfcEra era,
                         boolean hideOpponentStats) {
 
-        GameSettingInputData inputData = new GameSettingInputData(
-                difficulty,
-                roundsPerFight,
-                era,
-                hideOpponentStats
-        );
+        final GameSettingInputData inputData =
+                new GameSettingInputData(
+                        difficulty,
+                        roundsPerFight,
+                        era,
+                        hideOpponentStats
+                );
 
         gameSettingInteractor.execute(inputData);
     }

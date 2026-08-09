@@ -4,29 +4,27 @@ import entity.CustomFighter;
 import entity.GameSettings;
 import entity.RealFighter;
 import entity.UfcEra;
-import use_case.fighter.FighterDataAccessInterface;
+import use_case.fighter_creation.FighterDataAccessInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Interactor for configuring a new game run.
+ * Interactor for the Configure a New Run user story.
  * Responsibilities:
- * 1. Create and validate GameSettings.
- * 2. Get all real fighters from the project's existing data source.
- * 3. Filter fighters based on the selected UFC era.
+ * 1. Build and validate GameSettings.
+ * 2. Ask the existing fighter data source for all RealFighters.
+ * 3. Apply the selected UFC era as a real filtering rule.
  * 4. Create a blank CustomFighter.
- * 5. Send the result to the presenter.
+ * 5. Send the configured run data to the presenter.
  */
 public class GameSettingInteractor implements GameSettingBoundary {
 
     private final FighterDataAccessInterface fighterDataAccess;
     private final GameSettingOutputBoundary presenter;
 
-    public GameSettingInteractor(
-            FighterDataAccessInterface fighterDataAccess,
-            GameSettingOutputBoundary presenter) {
-
+    public GameSettingInteractor(FighterDataAccessInterface fighterDataAccess,
+                                 GameSettingOutputBoundary presenter) {
         this.fighterDataAccess = fighterDataAccess;
         this.presenter = presenter;
     }
@@ -34,7 +32,12 @@ public class GameSettingInteractor implements GameSettingBoundary {
     @Override
     public void execute(GameSettingInputData inputData) {
 
-        GameSettings settings = new GameSettings(
+        if (inputData == null) {
+            presenter.prepareFailView("Game settings input is missing.");
+            return;
+        }
+
+        final GameSettings settings = new GameSettings(
                 inputData.getDifficulty(),
                 inputData.getRoundsPerFight(),
                 inputData.getEra(),
@@ -48,8 +51,7 @@ public class GameSettingInteractor implements GameSettingBoundary {
             return;
         }
 
-        List<RealFighter> allFighters =
-                fighterDataAccess.getFighters();
+        final List<RealFighter> allFighters = fighterDataAccess.getFighters();
 
         if (allFighters == null || allFighters.isEmpty()) {
             presenter.prepareFailView(
@@ -58,11 +60,8 @@ public class GameSettingInteractor implements GameSettingBoundary {
             return;
         }
 
-        List<RealFighter> eligibleFighters =
-                filterByEra(
-                        allFighters,
-                        settings.getEra()
-                );
+        final List<RealFighter> eligibleFighters =
+                filterByEra(allFighters, settings.getEra());
 
         if (eligibleFighters.isEmpty()) {
             presenter.prepareFailView(
@@ -71,10 +70,10 @@ public class GameSettingInteractor implements GameSettingBoundary {
             return;
         }
 
-        CustomFighter customFighter =
+        final CustomFighter customFighter =
                 new CustomFighter("Custom Fighter");
 
-        GameSettingOutputData outputData =
+        final GameSettingOutputData outputData =
                 new GameSettingOutputData(
                         settings,
                         customFighter,
@@ -84,19 +83,18 @@ public class GameSettingInteractor implements GameSettingBoundary {
         presenter.prepareSuccessView(outputData);
     }
 
-    private List<RealFighter> filterByEra(
-            List<RealFighter> fighters,
-            UfcEra selectedEra) {
+
+    private List<RealFighter> filterByEra(List<RealFighter> fighters,
+                                          UfcEra selectedEra) {
 
         if (selectedEra == UfcEra.ALL_TIME) {
             return new ArrayList<>(fighters);
         }
 
-        List<RealFighter> eligibleFighters =
-                new ArrayList<>();
+        final List<RealFighter> eligibleFighters = new ArrayList<>();
 
         for (RealFighter fighter : fighters) {
-            if (fighter.getEra() == selectedEra) {
+            if (fighter != null && fighter.getEra() == selectedEra) {
                 eligibleFighters.add(fighter);
             }
         }
