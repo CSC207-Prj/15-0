@@ -3,7 +3,7 @@ package interface_adapter.game_setting;
 import interface_adapter.ViewModel;
 
 /**
- * View model for the Game Settings screen.
+ * ViewModel for the Game Settings screen.
  */
 public class GameSettingViewModel extends ViewModel {
     public static final String VIEW_NAME = "settings";
@@ -19,7 +19,7 @@ public class GameSettingViewModel extends ViewModel {
     }
 
     public void setState(GameSettingState state) {
-        GameSettingState oldState = this.state;
+        final GameSettingState oldState = this.state;
 
         if (state == null) {
             this.state = new GameSettingState();

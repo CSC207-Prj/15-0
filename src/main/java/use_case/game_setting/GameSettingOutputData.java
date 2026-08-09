@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Result of successfully configuring a new run.
+ * Output produced after a new run has been configured successfully.
  */
 public class GameSettingOutputData {
     private final GameSettings settings;

@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * State displayed or used after the game-setting use case runs.
+ * State produced by the Game Setting presenter.
  */
 public class GameSettingState {
+
     private String errorMessage = "";
     private boolean configured;
     private GameSettings settings;
