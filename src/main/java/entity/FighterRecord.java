@@ -1,6 +1,6 @@
 package entity;
 
-/** Basic win/loss/finish data shared by fighters. Fight-update behaviour is added later. */
+/** Basic win/loss/finish data shared by fighters. */
 public final class FighterRecord {
     private int wins;
     private int losses;
@@ -33,6 +33,23 @@ public final class FighterRecord {
 
     public int getTotalFights() {
         return wins + losses;
+    }
+
+    /**
+     * Records a win for this fighter.
+     *
+     * @param finish true when the win was by KO/TKO or submission
+     */
+    public void registerWin(boolean finish) {
+        wins++;
+        if (finish) {
+            finishes++;
+        }
+    }
+
+    /** Records a loss for this fighter. */
+    public void registerLoss() {
+        losses++;
     }
 
     public FighterRecord copy() {
