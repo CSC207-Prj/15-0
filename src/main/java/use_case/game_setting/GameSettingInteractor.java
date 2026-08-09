@@ -4,7 +4,7 @@ import entity.CustomFighter;
 import entity.GameSettings;
 import entity.RealFighter;
 import entity.UfcEra;
-import use_case.fighter.FighterDataAccessInterface;
+import use_case.fighter_creation.FighterDataAccessInterface;
 
 import java.util.ArrayList;
 import java.util.List;
