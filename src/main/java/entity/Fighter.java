@@ -57,6 +57,11 @@ public abstract class Fighter {
         return attributes.containsKey(attribute);
     }
 
+    /** Reports whether every one of the six attributes has been assigned a value. */
+    public boolean hasAllAttributes() {
+        return attributes.size() == Attribute.values().length;
+    }
+
     public Map<Attribute, Double> getAttributes() {
         return Collections.unmodifiableMap(attributes);
     }
