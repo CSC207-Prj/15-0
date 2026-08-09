@@ -2,6 +2,7 @@ package app;
 
 import data_access.InMemorySimulationDataAccessObject;
 import data_access.JavaRandomSource;
+import data_access.JsonFighterRosterDataAccess;
 
 import interface_adapter.ViewManagerModel;
 import view.*;
@@ -57,7 +58,11 @@ public final class Main {
                 () -> navigation.setActiveView(ViewNames.WELCOME),
                 () -> navigation.setActiveView(ViewNames.SAVED_FIGHTERS));
 
-        final SavedFightersView savedFighters = new SavedFightersView(
+        final JsonFighterRosterDataAccess fighterRoster =
+                new JsonFighterRosterDataAccess("saved_fighters.json");
+        final SavedFightersView savedFighters = SavedFightersUseCaseFactory.create(
+                fighterRoster, fighterRoster, fighterRoster, fighterRoster,
+                new JavaRandomSource(),
                 () -> navigation.setActiveView(ViewNames.WELCOME));
         final FighterBrowserView fighterBrowser = new FighterBrowserView(
                 () -> navigation.setActiveView(ViewNames.WELCOME));
