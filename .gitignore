@@ -33,3 +33,5 @@ Thumbs.db
 .env
 
 out/
+# Local saved-fighter roster (created at runtime)
+saved_fighters.json
