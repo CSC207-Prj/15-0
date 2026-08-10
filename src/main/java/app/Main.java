@@ -4,6 +4,7 @@ import data_access.InMemorySimulationDataAccessObject;
 import data_access.DemoRankingsFactory;
 import data_access.JavaRandomSource;
 import data_access.JsonFighterRosterDataAccess;
+import data_access.FighterBrowserDataAccessAdapter;
 
 import interface_adapter.ViewManagerModel;
 import view.*;
@@ -162,7 +163,8 @@ public final class Main {
                 new JavaRandomSource(),
                 savedFightersViewModel,
                 () -> navigation.setActiveView(ViewNames.WELCOME));
-        final FighterBrowserView fighterBrowser = new FighterBrowserView(
+        final FighterBrowserView fighterBrowser = FighterBrowserUseCaseFactory.create(
+                new FighterBrowserDataAccessAdapter(fighterDataAccess),
                 () -> navigation.setActiveView(ViewNames.WELCOME));
 
         viewManager.addView(ViewNames.SPLASH, splash);
