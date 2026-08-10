@@ -185,7 +185,7 @@ public final class Main {
         viewManager.addView(ViewNames.SAVED_FIGHTERS, savedFighters);
         viewManager.addView(ViewNames.FIGHTER_BROWSER, fighterBrowser);
 
-        final JFrame frame = new JFrame("15-0: Build-A-Fighter Gauntlet — Stage 2 Preview");
+        final JFrame frame = new JFrame("15-0: Build-A-Fighter Gauntlet");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(viewManager);
         frame.setMinimumSize(new Dimension(1200, 760));

@@ -16,7 +16,7 @@ import java.util.List;
 import javax.swing.*;
 
 /**
- *Naming, spin, and rating controls are visual placeholders for now.
+ *Naming, spin, and rating controls view.
  */
 public final class ConfirmView extends JPanel implements PropertyChangeListener {
     private final ConfirmController confirmController;
@@ -27,11 +27,14 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
     private final JTextField name = UfcTheme.textField(24);
     private final JButton spin = UfcTheme.primaryButton("Spin Weight Class");
     private final JButton confirm = UfcTheme.primaryButton("Confirm Fighter");
-    private final JLabel division = UfcTheme.centeredLabel("TBD", new Font(Font.SANS_SERIF, Font.BOLD, 30), UfcTheme.TEXT);
-    private final JLabel overall = UfcTheme.centeredLabel("--", new Font(Font.SANS_SERIF, Font.BOLD, 58), UfcTheme.ACCENT);
+    private final JLabel division = UfcTheme.centeredLabel("TBD", new Font(Font.SANS_SERIF,
+            Font.BOLD, 30), UfcTheme.TEXT);
+    private final JLabel overall = UfcTheme.centeredLabel("--", new Font(Font.SANS_SERIF,
+            Font.BOLD, 58), UfcTheme.ACCENT);
 
 
-    public ConfirmView(ConfirmController confirmController, ConfirmViewModel confirmViewModel,Runnable backAction, Runnable continueAction) {
+    public ConfirmView(ConfirmController confirmController, ConfirmViewModel confirmViewModel,Runnable backAction,
+                       Runnable continueAction) {
         this.confirmController = confirmController;
         this.confirmViewModel = confirmViewModel;
         this.continueAction = continueAction;
@@ -99,7 +102,8 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
         for (int index = 0; index < ATTRIBUTE_NAMES.length; index++) {
             final JPanel row = UfcTheme.panel(new BorderLayout(12, 0));
             row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 62));
-            row.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, UfcTheme.BORDER), BorderFactory.createEmptyBorder(10, 8, 10, 8)));
+            row.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1,
+                    0, UfcTheme.BORDER), BorderFactory.createEmptyBorder(10, 8, 10, 8)));
             final JLabel label = UfcTheme.body(ATTRIBUTE_NAMES[index]);
             label.setFont(UfcTheme.BODY_BOLD);
             label.setForeground(UfcTheme.TEXT);
@@ -174,7 +178,8 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
                 && !state.isConfirmed());
 
         if (state.getErrorMessage() != null) {
-            JOptionPane.showMessageDialog(this, state.getErrorMessage(), "Confirm Fighter", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, state.getErrorMessage(), "Confirm Fighter",
+                    JOptionPane.ERROR_MESSAGE);
         }
 
         if (state.isConfirmed()) {
