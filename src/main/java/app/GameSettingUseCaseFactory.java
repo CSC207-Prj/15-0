@@ -7,6 +7,7 @@ import use_case.fighter_creation.FighterDataAccessInterface;
 import use_case.game_setting.GameSettingBoundary;
 import use_case.game_setting.GameSettingInteractor;
 import use_case.game_setting.GameSettingOutputBoundary;
+import use_case.game_setting.GameSettingSessionDataAccessInterface;
 import view.GameSettingsView;
 
 /**
@@ -19,6 +20,7 @@ public final class GameSettingUseCaseFactory {
 
     public static GameSettingsView create(
             FighterDataAccessInterface fighterDataAccess,
+            GameSettingSessionDataAccessInterface sessionDataAccess,
             Runnable backAction,
             Runnable continueAction) {
 
@@ -31,7 +33,8 @@ public final class GameSettingUseCaseFactory {
         final GameSettingBoundary interactor =
                 new GameSettingInteractor(
                         fighterDataAccess,
-                        presenter
+                        presenter,
+                        sessionDataAccess
                 );
 
         final GameSettingController controller =

@@ -11,34 +11,54 @@ import java.util.Map;
 /**
  * Presenter for the Reroll Fighter use case.
  */
-public class RerollFighterPresenter implements RerollFighterOutputBoundary {
+public class RerollFighterPresenter
+        implements RerollFighterOutputBoundary {
 
     private final FighterCreationViewModel viewModel;
 
-    public RerollFighterPresenter(FighterCreationViewModel viewModel) {
+    public RerollFighterPresenter(
+            FighterCreationViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
     @Override
-    public void prepareSuccessView(RerollFighterOutputData outputData) {
-        final RealFighter fighter = outputData.getFighter();
-        viewModel.setCurrentFighter(fighter);
-        viewModel.setCurrentFighter(fighter);
-        final Map<String, Integer> stats = new HashMap<>();
+    public void prepareSuccessView(
+            RerollFighterOutputData outputData) {
+        final RealFighter fighter =
+                outputData.getFighter();
 
-        for (Map.Entry<Attribute, Double> entry : fighter.getAttributes().entrySet()) {
-            stats.put(entry.getKey().getDisplayName(),
-                    (int) Math.round(entry.getValue()));
+        final Map<String, Integer> stats =
+                new HashMap<>();
+
+        for (Map.Entry<Attribute, Double> entry
+                : fighter.getAttributes().entrySet()) {
+            stats.put(
+                    entry.getKey().getDisplayName(),
+                    (int) Math.round(entry.getValue())
+            );
         }
 
-        final String details = fighter.getProfessionalRecord() + " • " + fighter.getWeightClass().getDisplayName();
+        final String details =
+                fighter.getProfessionalRecord()
+                        + " • "
+                        + fighter.getWeightClass().getDisplayName()
+                        + " • "
+                        + fighter.getEra().getDisplayName();
 
-        viewModel.setRolledFighter(fighter.getName(), details, stats);
-        viewModel.setRerollsLeft(outputData.getRerollsLeft());
+        viewModel.setCurrentFighter(fighter);
+        viewModel.setRolledFighter(
+                fighter.getName(),
+                details,
+                stats
+        );
+        viewModel.setRerollsLeft(
+                outputData.getRerollsLeft()
+        );
+        viewModel.setErrorMessage("");
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
-        viewModel.setRerollsLeft(0);
+        viewModel.setErrorMessage(errorMessage);
     }
 }

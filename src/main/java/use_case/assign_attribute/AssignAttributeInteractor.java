@@ -9,38 +9,81 @@ import use_case.spin_fighter.SpinFighterInputData;
 /**
  * Interactor for the Assign Attribute use case.
  */
-public class AssignAttributeInteractor implements AssignAttributeInputBoundary {
+public class AssignAttributeInteractor
+        implements AssignAttributeInputBoundary {
 
     private final AssignAttributeOutputBoundary presenter;
     private final SpinFighterInputBoundary spinFighterInteractor;
 
-    public AssignAttributeInteractor(AssignAttributeOutputBoundary presenter,
-                                     SpinFighterInputBoundary spinFighterInteractor) {
+    public AssignAttributeInteractor(
+            AssignAttributeOutputBoundary presenter,
+            SpinFighterInputBoundary spinFighterInteractor) {
         this.presenter = presenter;
         this.spinFighterInteractor = spinFighterInteractor;
     }
 
     @Override
     public void execute(AssignAttributeInputData inputData) {
-        final RealFighter realFighter = inputData.getRealFighter();
-        final CustomFighter customFighter = inputData.getCustomFighter();
-        final Attribute attribute = inputData.getAttribute();
+        final RealFighter realFighter =
+                inputData.getRealFighter();
+        final CustomFighter customFighter =
+                inputData.getCustomFighter();
+        final Attribute attribute =
+                inputData.getAttribute();
 
-        if (customFighter.hasAttribute(attribute)) {
-            presenter.prepareFailView("That attribute is already assigned.");
+        if (realFighter == null) {
+            presenter.prepareFailView(
+                    "Spin a fighter before assigning an attribute."
+            );
             return;
         }
 
-        final double value = realFighter.getAttribute(attribute);
+        if (attribute == null) {
+            presenter.prepareFailView(
+                    "Select an attribute first."
+            );
+            return;
+        }
 
-        customFighter.assignAttribute(attribute, value);
+        if (customFighter.hasAttribute(attribute)) {
+            presenter.prepareFailView(
+                    "That attribute is already assigned."
+            );
+            return;
+        }
 
-        final AssignAttributeOutputData outputData = new AssignAttributeOutputData(attribute, value, realFighter.getName());
+        if (customFighter.hasUsedSourceFighter(
+                realFighter.getName())) {
+            presenter.prepareFailView(
+                    "That fighter has already contributed an attribute."
+            );
+            return;
+        }
 
-        presenter.prepareSuccessView(outputData);
+        final double value =
+                realFighter.getAttribute(attribute);
+
+        customFighter.assignAttributeFrom(
+                attribute,
+                value,
+                realFighter.getName()
+        );
+
+        presenter.prepareSuccessView(
+                new AssignAttributeOutputData(
+                        attribute,
+                        value,
+                        realFighter.getName()
+                )
+        );
 
         if (!customFighter.hasAllAttributes()) {
-            spinFighterInteractor.execute(new SpinFighterInputData(inputData.getEra()));
+            spinFighterInteractor.execute(
+                    new SpinFighterInputData(
+                            inputData.getEra(),
+                            customFighter
+                    )
+            );
         }
     }
 }

@@ -5,10 +5,13 @@ package use_case.spin_fighter;
  */
 public interface SpinFighterOutputBoundary {
 
-    /**
-     * Prepares the successfully rolled fighter for presentation.
-     *
-     * @param outputData the result of the Spin Fighter use case
-     */
     void prepareSuccessView(SpinFighterOutputData outputData);
+
+    /**
+     * Optional failure hook retained as a default method so older test
+     * presenters that only implement success still compile.
+     */
+    default void prepareFailView(String errorMessage) {
+        // No-op by default.
+    }
 }

@@ -1,5 +1,6 @@
 package interface_adapter.fighter_creation;
 
+import entity.CustomFighter;
 import entity.UfcEra;
 import use_case.spin_fighter.SpinFighterInputBoundary;
 import use_case.spin_fighter.SpinFighterInputData;
@@ -11,13 +12,22 @@ public class SpinFighterController {
 
     private final SpinFighterInputBoundary interactor;
 
-    public SpinFighterController(SpinFighterInputBoundary interactor) {
+    public SpinFighterController(
+            SpinFighterInputBoundary interactor) {
         this.interactor = interactor;
     }
 
     public void execute(UfcEra era) {
-        final SpinFighterInputData inputData = new SpinFighterInputData(era);
+        interactor.execute(new SpinFighterInputData(era));
+    }
 
-        interactor.execute(inputData);
+    public void execute(UfcEra era,
+                        CustomFighter customFighter) {
+        interactor.execute(
+                new SpinFighterInputData(
+                        era,
+                        customFighter
+                )
+        );
     }
 }

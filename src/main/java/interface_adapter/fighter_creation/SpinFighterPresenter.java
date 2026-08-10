@@ -11,26 +11,52 @@ import java.util.Map;
 /**
  * Presenter for the Spin Fighter use case.
  */
-public class SpinFighterPresenter implements SpinFighterOutputBoundary {
+public class SpinFighterPresenter
+        implements SpinFighterOutputBoundary {
 
     private final FighterCreationViewModel viewModel;
 
-    public SpinFighterPresenter(FighterCreationViewModel viewModel) {
+    public SpinFighterPresenter(
+            FighterCreationViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
     @Override
-    public void prepareSuccessView(SpinFighterOutputData outputData) {
-        final RealFighter fighter = outputData.getFighter();
-        final Map<String, Integer> stats = new HashMap<>();
+    public void prepareSuccessView(
+            SpinFighterOutputData outputData) {
+        final RealFighter fighter =
+                outputData.getFighter();
 
-        for (Map.Entry<Attribute, Double> entry : fighter.getAttributes().entrySet()) {
-            stats.put(entry.getKey().getDisplayName(), (int) Math.round(entry.getValue()));
+        final Map<String, Integer> stats =
+                new HashMap<>();
+
+        for (Map.Entry<Attribute, Double> entry
+                : fighter.getAttributes().entrySet()) {
+            stats.put(
+                    entry.getKey().getDisplayName(),
+                    (int) Math.round(entry.getValue())
+            );
         }
 
-        final String details = fighter.getProfessionalRecord()
-                + " • " + fighter.getWeightClass().getDisplayName();
+        final String details =
+                fighter.getProfessionalRecord()
+                        + " • "
+                        + fighter.getWeightClass().getDisplayName()
+                        + " • "
+                        + fighter.getEra().getDisplayName();
 
-        viewModel.setRolledFighter(fighter.getName(), details, stats);
+        viewModel.setCurrentFighter(fighter);
+        viewModel.setRolledFighter(
+                fighter.getName(),
+                details,
+                stats
+        );
+        viewModel.setErrorMessage("");
+    }
+
+    @Override
+    public void prepareFailView(String errorMessage) {
+        viewModel.clearCurrentFighter();
+        viewModel.setErrorMessage(errorMessage);
     }
 }
