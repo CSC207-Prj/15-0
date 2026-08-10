@@ -55,9 +55,19 @@ public class BrowseFightersInteractor implements BrowseFightersInputBoundary {
                     fighter.getEra().getDisplayName()));
         }
 
-        final RealFighter selected = chooseSelectedFighter(
+        RealFighter selected = chooseSelectedFighter(
                 filtered,
                 inputData.getSelectedFighterName());
+
+        if (selected != null) {
+            try {
+                selected = dataAccess.getFighterDetails(selected);
+            }
+            catch (RuntimeException ignored) {
+                // The directory entry is still usable if detailed profile
+                // data is temporarily unavailable.
+            }
+        }
 
         final BrowseFightersOutputData.FighterProfile profile =
                 selected == null ? null : toProfile(selected);

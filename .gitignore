@@ -35,3 +35,7 @@ Thumbs.db
 out/
 # Local saved-fighter roster (created at runtime)
 saved_fighters.json
+
+# Cito API local config / cache
+cito.local.properties
+.cito-cache/

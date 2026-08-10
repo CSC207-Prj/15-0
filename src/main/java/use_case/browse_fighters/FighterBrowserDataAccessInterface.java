@@ -9,4 +9,12 @@ import java.util.List;
  */
 public interface FighterBrowserDataAccessInterface {
     List<RealFighter> getFighters();
+
+    /**
+     * Loads the most complete available profile for one selected fighter.
+     * Local/in-memory implementations can simply return the catalogue entry.
+     */
+    default RealFighter getFighterDetails(RealFighter fighter) {
+        return fighter;
+    }
 }

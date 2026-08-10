@@ -1,7 +1,9 @@
 package app;
 
 import data_access.InMemorySimulationDataAccessObject;
-import data_access.DemoRankingsFactory;
+import data_access.CitoApiClient;
+import data_access.CitoConfig;
+import data_access.CitoUfcDataAccess;
 import data_access.JavaRandomSource;
 import data_access.JsonFighterRosterDataAccess;
 import data_access.FighterBrowserDataAccessAdapter;
@@ -60,8 +62,14 @@ public final class Main {
                 () -> navigation.setActiveView(ViewNames.SAVED_FIGHTERS),
                 () -> navigation.setActiveView(ViewNames.FIGHTER_BROWSER),
                 () -> System.exit(0));
+
+        final CitoUfcDataAccess citoUfcDataAccess =
+                new CitoUfcDataAccess(
+                        new CitoApiClient(CitoConfig.load()),
+                        new InMemoryFighterDataAccessObject());
+
         final FighterDataAccessInterface fighterDataAccess =
-                new InMemoryFighterDataAccessObject();
+                citoUfcDataAccess;
 
         final GameSettingViewModel gameSettingViewModel =
                 new GameSettingViewModel();
@@ -133,7 +141,7 @@ public final class Main {
 
                     @Override
                     public Division getDivision(WeightClass weightClass) {
-                        return DemoRankingsFactory.createDivision(weightClass);
+                        return citoUfcDataAccess.getDivision(weightClass);
                     }
 
                     @Override
