@@ -5,7 +5,6 @@ import entity.Attribute;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -33,6 +32,7 @@ import interface_adapter.fighter_creation.SpinFighterController;
 public final class FighterCreationView extends JPanel implements PropertyChangeListener {
 
     private JLabel rerollsLabel;
+    private JButton spinButton;
     private JLabel fighterNameLabel;
     private JLabel fighterDetailsLabel;
     private Attribute selectedAttribute;
@@ -89,7 +89,7 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
         actions.setBackground(UfcTheme.HEADER);
 
         final JButton back = UfcTheme.secondaryButton("Back to Settings");
-        final JButton spin = UfcTheme.primaryButton("Spin Fighter");
+        spinButton = UfcTheme.primaryButton("Spin Fighter");
         final JButton reroll = UfcTheme.secondaryButton("Reroll Fighter");
         final JButton assign = UfcTheme.primaryButton("Assign Attribute");
         final JButton next = UfcTheme.primaryButton("Continue");
@@ -100,7 +100,7 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
                 backAction.run();
             }
         });
-        spin.addActionListener(new ActionListener() {
+        spinButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 spinFighterController.execute(
@@ -140,7 +140,7 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
         });
 
         actions.add(back);
-        actions.add(spin);
+        actions.add(spinButton);
         actions.add(reroll);
         actions.add(assign);
         actions.add(next);
@@ -299,6 +299,7 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
                 );
             }
         }
+        spinButton.setEnabled(!viewModel.isFighterRevealed());
 
         revalidate();
         repaint();
@@ -308,6 +309,4 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
     public void propertyChange(PropertyChangeEvent event) {
         updateView();
     }
-
-
 }
