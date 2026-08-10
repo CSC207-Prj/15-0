@@ -1,8 +1,8 @@
 package view;
 
-import interface_adapter.ConfirmController;
-import interface_adapter.ConfirmState;
-import interface_adapter.ConfirmViewModel;
+import interface_adapter.confirm_fighter.ConfirmController;
+import interface_adapter.confirm_fighter.ConfirmState;
+import interface_adapter.confirm_fighter.ConfirmViewModel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

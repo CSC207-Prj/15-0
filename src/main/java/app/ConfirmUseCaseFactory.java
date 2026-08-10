@@ -1,8 +1,8 @@
 package app;
 
-import interface_adapter.ConfirmController;
-import interface_adapter.ConfirmPresenter;
-import interface_adapter.ConfirmViewModel;
+import interface_adapter.confirm_fighter.ConfirmController;
+import interface_adapter.confirm_fighter.ConfirmPresenter;
+import interface_adapter.confirm_fighter.ConfirmViewModel;
 import use_case.confirm.ConfirmInputBoundary;
 import use_case.confirm.ConfirmInteractor;
 import use_case.confirm.ConfirmOutputBoundary;
@@ -13,9 +13,9 @@ public final class ConfirmUseCaseFactory {
     private ConfirmUseCaseFactory() {
     }
 
-    public static ConfirmView create(Runnable backAction,
+    public static ConfirmView create(ConfirmViewModel viewModel,
+                                     Runnable backAction,
                                      Runnable continueAction) {
-        final ConfirmViewModel viewModel = new ConfirmViewModel();
 
         final ConfirmOutputBoundary presenter =
                 new ConfirmPresenter(viewModel);

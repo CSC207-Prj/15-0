@@ -1,4 +1,4 @@
-package interface_adapter;
+package interface_adapter.confirm_fighter;
 
 import use_case.confirm.ConfirmOutputBoundary;
 import use_case.confirm.ConfirmOutputData;
@@ -15,6 +15,7 @@ public class ConfirmPresenter implements ConfirmOutputBoundary {
         state.setAttributePoints(outputData.getAttributePoints());
         state.setWeightClass(outputData.getWeightClass());
         state.setOverall(Integer.toString(outputData.getOverall()));
+        state.setWeightClassLocked(true);
         state.setConfirmed(confirm);
         state.setErrorMessage(null);
         confirmViewModel.firePropertyChanged();
@@ -23,6 +24,8 @@ public class ConfirmPresenter implements ConfirmOutputBoundary {
     }
     @Override
     public void prepareSpinSuccessView(ConfirmOutputData outputData) {
+        final ConfirmState state = confirmViewModel.getState();
+        state.setWeightClassLocked(true);
         updateState(outputData, false);
     }
 
