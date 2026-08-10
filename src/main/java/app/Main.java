@@ -161,6 +161,7 @@ public final class Main {
         final SavedFightersView savedFighters = SavedFightersUseCaseFactory.create(
                 fighterRoster, fighterRoster, fighterRoster, fighterRoster,
                 new JavaRandomSource(),
+                saveFighterController,
                 savedFightersViewModel,
                 () -> navigation.setActiveView(ViewNames.WELCOME));
         final FighterBrowserView fighterBrowser = FighterBrowserUseCaseFactory.create(

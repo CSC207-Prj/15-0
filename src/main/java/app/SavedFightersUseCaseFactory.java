@@ -11,6 +11,7 @@ import interface_adapter.saved_fighters.ExhibitionController;
 import interface_adapter.saved_fighters.ExhibitionPresenter;
 import interface_adapter.saved_fighters.LoadFighterController;
 import interface_adapter.saved_fighters.LoadFighterPresenter;
+import interface_adapter.saved_fighters.SaveFighterController;
 import interface_adapter.saved_fighters.SavedFightersViewModel;
 import interface_adapter.saved_fighters.ViewRosterController;
 import interface_adapter.saved_fighters.ViewRosterPresenter;
@@ -39,6 +40,7 @@ public final class SavedFightersUseCaseFactory {
             LoadFighterDataAccessInterface loadFighterDataAccess,
             ExhibitionDataAccessInterface exhibitionDataAccess,
             RandomSource randomSource,
+            SaveFighterController saveFighterController,
             SavedFightersViewModel viewModel,
             Runnable backHomeAction) {
 
@@ -65,6 +67,7 @@ public final class SavedFightersUseCaseFactory {
                 deleteFighterController,
                 loadFighterController,
                 exhibitionController,
+                Objects.requireNonNull(saveFighterController, "saveFighterController"),
                 viewModel,
                 backHomeAction);
     }

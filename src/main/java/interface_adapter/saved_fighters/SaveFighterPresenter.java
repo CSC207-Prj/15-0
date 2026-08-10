@@ -29,4 +29,14 @@ public class SaveFighterPresenter implements SaveFighterOutputBoundary {
         state.setMessage("");
         viewModel.firePropertyChanged();
     }
+
+    @Override
+    public void prepareDuplicateNameView(SaveFighterOutputData outputData) {
+        final SavedFightersState state = viewModel.getState();
+        state.setDuplicatePending(outputData.getFighter());
+        state.setError("A fighter named \"" + outputData.getFighterName()
+                + "\" is already in your roster — choose a different name.");
+        state.setMessage("");
+        viewModel.firePropertyChanged();
+    }
 }
