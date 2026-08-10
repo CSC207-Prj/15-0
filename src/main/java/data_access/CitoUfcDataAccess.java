@@ -28,7 +28,7 @@ public final class CitoUfcDataAccess
         implements FighterDataAccessInterface, FighterDetailsDataAccessInterface {
 
     private static final int FIGHTER_PAGE_LIMIT = 50;
-    private static final int MAX_FIGHTER_PAGES = 2;
+    private static final int MAX_FIGHTER_PAGES = 50;
 
     private final CitoApiClient client;
     private final FighterDataAccessInterface fallbackFighters;
@@ -87,13 +87,23 @@ public final class CitoUfcDataAccess
             return fighter;
         }
 
-        final String key = normalizeName(fighter.getName());
-        final RealFighter cached = detailCache.get(key);
+        final String nameKey =
+                normalizeName(fighter.getName());
+
+        final String cacheKey =
+                nameKey
+                        + "|"
+                        + fighter.getWeightClass().name()
+                        + "|"
+                        + fighter.getRank();
+
+        final RealFighter cached =
+                detailCache.get(cacheKey);
         if (cached != null) {
             return cached;
         }
 
-        String slug = slugByName.get(key);
+        String slug = slugByName.get(nameKey);
         if (slug == null || slug.isBlank()) {
             slug = slugify(fighter.getName());
         }
@@ -109,7 +119,7 @@ public final class CitoUfcDataAccess
             final JSONObject stats =
                     primaryObject(statsResponse);
             final JSONObject directory =
-                    directoryJsonByName.get(key);
+                    directoryJsonByName.get(nameKey);
 
             final JSONObject merged =
                     CitoFighterMapper.merge(
@@ -124,7 +134,7 @@ public final class CitoUfcDataAccess
                             fighter.getRank(),
                             fighter.getEra());
 
-            detailCache.put(key, detailed);
+            detailCache.put(cacheKey, detailed);
             return detailed;
         }
         catch (RuntimeException exception) {
@@ -207,8 +217,7 @@ public final class CitoUfcDataAccess
                 }
             }
 
-            if (!hasMore(response)
-                    || rows.length() < FIGHTER_PAGE_LIMIT) {
+            if (rows.length() < FIGHTER_PAGE_LIMIT) {
                 break;
             }
         }
@@ -262,13 +271,31 @@ public final class CitoUfcDataAccess
             }
 
             try {
-                final RealFighter fighter =
+                final RealFighter basicFighter =
                         CitoFighterMapper.toFighter(
                                 row,
                                 weightClass,
                                 rank,
                                 UfcEra.MODERN);
-                byRank.put(rank, fighter);
+
+                // Remember the ranking JSON and exact Cito slug.
+                final String nameKey =
+                        normalizeName(basicFighter.getName());
+
+                directoryJsonByName.put(nameKey, row);
+
+                final String fighterSlug =
+                        CitoFighterMapper.slug(row);
+
+                if (fighterSlug != null && !fighterSlug.isBlank()) {
+                    slugByName.put(nameKey, fighterSlug);
+                }
+
+                // Fetch profile + stats and remap the fighter.
+                final RealFighter detailedFighter =
+                        getFighterDetails(basicFighter);
+
+                byRank.put(rank, detailedFighter);
                 inferredRank = Math.max(
                         inferredRank,
                         rank + 1);
