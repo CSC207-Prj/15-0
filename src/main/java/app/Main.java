@@ -1,6 +1,7 @@
 package app;
 
 import data_access.InMemorySimulationDataAccessObject;
+import data_access.DemoRankingsFactory;
 import data_access.JavaRandomSource;
 import data_access.JsonFighterRosterDataAccess;
 
@@ -15,11 +16,21 @@ import java.awt.Dimension;
 import data_access.InMemoryFighterDataAccessObject;
 import entity.Attribute;
 import entity.CustomFighter;
+import entity.Division;
+import entity.GameRun;
+import entity.GameSettings;
+import entity.WeightClass;
 import interface_adapter.confirm_fighter.ConfirmState;
 import interface_adapter.confirm_fighter.ConfirmViewModel;
 import interface_adapter.fighter_creation.FighterCreationViewModel;
 import interface_adapter.game_setting.GameSettingViewModel;
 import use_case.fighter_creation.FighterDataAccessInterface;
+import use_case.confirm.ConfirmInputBoundary;
+import use_case.confirm.ConfirmInteractor;
+import use_case.confirm.ConfirmOutputBoundary;
+import use_case.confirm.ConfirmRunDataAccessInterface;
+import interface_adapter.confirm_fighter.ConfirmController;
+import interface_adapter.confirm_fighter.ConfirmPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,11 +91,6 @@ public final class Main {
                     }
                 });
 
-        final ConfirmView overview = ConfirmUseCaseFactory.create(
-                confirmViewModel,
-                () -> navigation.setActiveView(ViewNames.FIGHTER_CREATION),
-                () -> navigation.setActiveView(ViewNames.SIMULATION));
-
         final InMemorySimulationDataAccessObject simulationDataAccess =
                 new InMemorySimulationDataAccessObject();
         final SimulationView simulation = SimulationUseCaseFactory.create(
@@ -92,6 +98,45 @@ public final class Main {
                 new JavaRandomSource(),
                 () -> navigation.setActiveView(ViewNames.WELCOME),
                 () -> navigation.setActiveView(ViewNames.SAVED_FIGHTERS));
+
+        final ConfirmRunDataAccessInterface confirmRunDataAccess =
+                new ConfirmRunDataAccessInterface() {
+                    @Override
+                    public CustomFighter getCustomFighter() {
+                        return fighterCreationViewModel.getCustomFighter();
+                    }
+
+                    @Override
+                    public GameSettings getGameSettings() {
+                        return fighterCreationViewModel.getGameSettings();
+                    }
+
+                    @Override
+                    public Division getDivision(WeightClass weightClass) {
+                        return DemoRankingsFactory.createDivision(weightClass);
+                    }
+
+                    @Override
+                    public void saveGameRun(GameRun gameRun) {
+                        simulationDataAccess.saveGameRun(gameRun);
+                    }
+                };
+
+        final ConfirmOutputBoundary confirmPresenter =
+                new ConfirmPresenter(confirmViewModel);
+        final ConfirmInputBoundary confirmInteractor =
+                new ConfirmInteractor(confirmPresenter, confirmRunDataAccess);
+        final ConfirmController confirmController =
+                new ConfirmController(confirmInteractor);
+
+        final ConfirmView overview = new ConfirmView(
+                confirmController,
+                confirmViewModel,
+                () -> navigation.setActiveView(ViewNames.FIGHTER_CREATION),
+                () -> {
+                    simulation.refreshRun();
+                    navigation.setActiveView(ViewNames.SIMULATION);
+                });
 
         final JsonFighterRosterDataAccess fighterRoster =
                 new JsonFighterRosterDataAccess("saved_fighters.json");

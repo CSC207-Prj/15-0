@@ -23,7 +23,7 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import interface_adapter.fighter_creation.AssignAttributeController;
+import interface_adapter.assign_attribute.AssignAttributeController;
 import interface_adapter.fighter_creation.FighterCreationViewModel;
 import interface_adapter.fighter_creation.RerollFighterController;
 import interface_adapter.fighter_creation.SpinFighterController;
