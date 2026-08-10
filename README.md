@@ -38,6 +38,7 @@ Real UFC fighter and ranking data can be loaded through the Cito API. If the API
 ## Project Overview
 
 The goal of **15-0** is to let a player create a custom MMA fighter using the strengths of real UFC fighters and then test that build against a division's ranked contenders.
+The project was created to turn real UFC fighter data into an interactive drafting and simulation game while applying the software-design principles taught in CSC207.
 
 A run begins with configurable rules such as difficulty, number of rounds, UFC era, and whether opponent ratings should be hidden. The player then drafts the following six gameplay attributes:
 
@@ -200,10 +201,17 @@ Notable patterns include:
 
 ## Requirements
 
-- **Java JDK 16 or newer**
-  - The Maven compiler target is Java 16.
+- **Java JDK 17 or newer**
+    - Download: https://www.oracle.com/java/technologies/downloads/
+
 - **Apache Maven**
-  - Used to download dependencies and run tests.
+    - Used to download dependencies and run tests.
+    - Download: https://maven.apache.org/download.cgi
+
+- **IntelliJ IDEA** *(recommended)*
+    - Any Java IDE with Maven support can be used.
+    - Download: https://www.jetbrains.com/idea/download/
+  
 - A desktop operating system capable of running Java Swing:
   - Windows
   - macOS
