@@ -19,18 +19,36 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import interface_adapter.fighter_creation.AssignAttributeController;
 import interface_adapter.fighter_creation.FighterCreationViewModel;
 import interface_adapter.fighter_creation.RerollFighterController;
 import interface_adapter.fighter_creation.SpinFighterController;
 
 /** View for building a custom fighter. */
-public final class FighterCreationView extends JPanel {
+public final class FighterCreationView extends JPanel implements PropertyChangeListener {
 
     private Attribute selectedAttribute;
     private JPanel selectedRow;
+    private final SpinFighterController spinFighterController;
+    private final RerollFighterController rerollFighterController;
+    private final AssignAttributeController assignAttributeController;
+    private final FighterCreationViewModel viewModel;
 
-    public FighterCreationView(Runnable backAction, Runnable continueAction) {
+    public FighterCreationView(SpinFighterController spinFighterController,
+        RerollFighterController rerollFighterController,
+        AssignAttributeController assignAttributeController,
+        FighterCreationViewModel viewModel,
+        Runnable backAction,
+        Runnable continueAction) {
+
+        this.spinFighterController = spinFighterController;
+        this.rerollFighterController = rerollFighterController;
+        this.assignAttributeController = assignAttributeController;
+        this.viewModel = viewModel;
+
         setLayout(new BorderLayout());
         setBackground(UfcTheme.BACKGROUND);
 
@@ -181,5 +199,11 @@ public final class FighterCreationView extends JPanel {
 
         panel.add(stats, BorderLayout.CENTER);
         return panel;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent event) {
+        revalidate();
+        repaint();
     }
 }

@@ -68,7 +68,7 @@ public class RerollFighterInteractorTest {
 
                     @Override
                     public void prepareFailView(String errorMessage) {
-                        fail();
+                        fail("Reroll should succeed.");
                     }
                 };
 
@@ -83,6 +83,61 @@ public class RerollFighterInteractorTest {
                         UfcEra.MODERN,
                         1,
                         currentFighter));
+    }
+
+    @Test
+    public void rerollFailsWhenNoRerollsRemain() {
+        final FighterDataAccessInterface fighterDataAccess =
+                new FighterDataAccessInterface() {
+                    @Override
+                    public List<RealFighter> getFighters() {
+                        fail("Fighter data should not be accessed.");
+                        return null;
+                    }
+                };
+
+        final RandomSource randomSource =
+                new RandomSource() {
+                    @Override
+                    public double nextDouble() {
+                        fail("Random source should not be used.");
+                        return 0.0;
+                    }
+
+                    @Override
+                    public int nextInt(int bound) {
+                        fail("Random source should not be used.");
+                        return 0;
+                    }
+                };
+
+        final RerollFighterOutputBoundary presenter =
+                new RerollFighterOutputBoundary() {
+                    @Override
+                    public void prepareSuccessView(
+                            RerollFighterOutputData outputData) {
+                        fail("Reroll should not succeed.");
+                    }
+
+                    @Override
+                    public void prepareFailView(String errorMessage) {
+                        assertEquals(
+                                "No rerolls remaining.",
+                                errorMessage);
+                    }
+                };
+
+        final RerollFighterInteractor interactor =
+                new RerollFighterInteractor(
+                        randomSource,
+                        fighterDataAccess,
+                        presenter);
+
+        interactor.execute(
+                new RerollFighterInputData(
+                        UfcEra.MODERN,
+                        0,
+                        createFighter("Current Fighter")));
     }
 
     private static RealFighter createFighter(String name) {
