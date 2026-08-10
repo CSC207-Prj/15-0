@@ -340,6 +340,7 @@ public final class CitoFighterMapper {
                 numberNullable(source,
                         "sigStrikesLandedPerMinute",
                         "significantStrikesLandedPerMinute",
+                        "sigStrikesLandedPerMin",
                         "slpm",
                         "sigStrLandedPerMin"),
                 2.5);
@@ -361,6 +362,7 @@ public final class CitoFighterMapper {
                 numberNullable(source,
                         "takedownsPer15Min",
                         "takedownsPer15Minutes",
+                        "takedownAvgPer15Min",
                         "takedownAverage",
                         "tdAvg"),
                 1.5);

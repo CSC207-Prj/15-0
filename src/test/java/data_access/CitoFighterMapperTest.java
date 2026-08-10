@@ -241,6 +241,36 @@ class CitoFighterMapperTest {
         assertTrue(fighter.getAttributes().get(Attribute.REACH) > 72.0);
     }
 
+    @Test
+    public void mapsCurrentCitoPerMinuteFieldNames() {
+        final JSONObject json = new JSONObject()
+                .put("name", "API Fighter")
+                .put("division", "Lightweight")
+                .put("recordWins", 10)
+                .put("recordLosses", 2)
+                .put("recordDraws", 0)
+                .put("strikingAccuracy", 0.50)
+                .put("sigStrikeDefense", 0.60)
+                .put("takedownAccuracy", 0.40)
+                .put("sigStrikesLandedPerMin", 5.0)
+                .put("takedownAvgPer15Min", 3.0)
+                .put("heightInches", 70)
+                .put("reachInches", 72);
+
+        final RealFighter fighter =
+                CitoFighterMapper.toFighter(json, null, 1);
+
+        assertEquals(
+                98.0,
+                fighter.getAttribute(Attribute.STRIKING),
+                0.001);
+
+        assertEquals(
+                85.0,
+                fighter.getAttribute(Attribute.TAKEDOWN),
+                0.001);
+    }
+
     private static UfcEra mapEra(JSONObject fields) {
         fields.put("name", "Era Fighter");
         fields.put("division", "Lightweight");

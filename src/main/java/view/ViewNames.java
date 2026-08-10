@@ -1,6 +1,6 @@
 package view;
 
-/** Card names used by the Stage 2 Swing navigation shell. */
+/** Card names used by Swing navigation shell. */
 public final class ViewNames {
     public static final String SPLASH = "splash";
     public static final String WELCOME = "welcome";
