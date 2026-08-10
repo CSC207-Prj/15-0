@@ -5,6 +5,7 @@ import entity.RandomSource;
 import entity.RealFighter;
 import entity.UfcEra;
 import use_case.fighter_creation.FighterDataAccessInterface;
+import use_case.fighter_creation.FighterDetailsDataAccessInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +14,32 @@ public class RerollFighterInteractor implements RerollFighterInputBoundary {
 
     private final RandomSource randomSource;
     private final FighterDataAccessInterface fighterDataAccess;
+    private final FighterDetailsDataAccessInterface fighterDetailsDataAccess;
     private final RerollFighterOutputBoundary presenter;
 
-    public RerollFighterInteractor(RandomSource randomSource, FighterDataAccessInterface fighterDataAccess, RerollFighterOutputBoundary presenter) {
+    public RerollFighterInteractor(RandomSource randomSource,
+                                   FighterDataAccessInterface fighterDataAccess,
+                                   RerollFighterOutputBoundary presenter) {
+        this(randomSource, fighterDataAccess, null, presenter);
+    }
+
+    public RerollFighterInteractor(RandomSource randomSource,
+                                   FighterDataAccessInterface fighterDataAccess,
+                                   FighterDetailsDataAccessInterface fighterDetailsDataAccess,
+                                   RerollFighterOutputBoundary presenter) {
         this.randomSource = randomSource;
         this.fighterDataAccess = fighterDataAccess;
+        this.fighterDetailsDataAccess = fighterDetailsDataAccess;
         this.presenter = presenter;
     }
 
     @Override
     public void execute(RerollFighterInputData inputData) {
+        if (inputData.getCurrentFighter() == null) {
+            presenter.prepareFailView("Spin a fighter before rerolling.");
+            return;
+        }
+
         if (inputData.getRerollsLeft() <= 0) {
             presenter.prepareFailView("No rerolls remaining.");
             return;
@@ -41,7 +58,10 @@ public class RerollFighterInteractor implements RerollFighterInputBoundary {
          * for every supported UFC era.
          */
         final int index = randomSource.nextInt(eligibleFighters.size());
-        final RealFighter fighter = eligibleFighters.get(index);
+        RealFighter fighter = eligibleFighters.get(index);
+        if (fighterDetailsDataAccess != null) {
+            fighter = fighterDetailsDataAccess.getFighterDetails(fighter);
+        }
         final RerollFighterOutputData outputData = new RerollFighterOutputData(fighter, inputData.getRerollsLeft() - 1);
         presenter.prepareSuccessView(outputData);
     }

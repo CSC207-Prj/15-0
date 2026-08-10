@@ -33,6 +33,7 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
 
     private JLabel rerollsLabel;
     private JButton spinButton;
+    private JButton rerollButton;
     private JLabel fighterNameLabel;
     private JLabel fighterDetailsLabel;
     private Attribute selectedAttribute;
@@ -90,7 +91,7 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
 
         final JButton back = UfcTheme.secondaryButton("Back to Settings");
         spinButton = UfcTheme.primaryButton("Spin Fighter");
-        final JButton reroll = UfcTheme.secondaryButton("Reroll Fighter");
+        rerollButton = UfcTheme.secondaryButton("Reroll Fighter");
         final JButton assign = UfcTheme.primaryButton("Assign Attribute");
         final JButton next = UfcTheme.primaryButton("Continue");
 
@@ -109,7 +110,7 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
             }
         });
 
-        reroll.addActionListener(new ActionListener() {
+        rerollButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 rerollFighterController.execute(
@@ -141,7 +142,7 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
 
         actions.add(back);
         actions.add(spinButton);
-        actions.add(reroll);
+        actions.add(rerollButton);
         actions.add(assign);
         actions.add(next);
         add(actions, BorderLayout.SOUTH);
@@ -300,6 +301,9 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
             }
         }
         spinButton.setEnabled(!viewModel.isFighterRevealed());
+        rerollButton.setEnabled(
+                viewModel.isFighterRevealed()
+                        && viewModel.getRerollsLeft() > 0);
 
         revalidate();
         repaint();

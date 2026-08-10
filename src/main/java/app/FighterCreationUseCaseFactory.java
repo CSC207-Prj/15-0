@@ -10,6 +10,7 @@ import interface_adapter.fighter_creation.SpinFighterController;
 import interface_adapter.fighter_creation.SpinFighterPresenter;
 import use_case.assign_attribute.AssignAttributeInteractor;
 import use_case.fighter_creation.FighterDataAccessInterface;
+import use_case.fighter_creation.FighterDetailsDataAccessInterface;
 import use_case.reroll_fighter.RerollFighterInteractor;
 import use_case.spin_fighter.SpinFighterInteractor;
 import view.FighterCreationView;
@@ -29,6 +30,11 @@ public final class FighterCreationUseCaseFactory {
             Runnable backAction,
             Runnable continueAction) {
 
+        final FighterDetailsDataAccessInterface detailsDataAccess =
+                fighterDataAccess instanceof FighterDetailsDataAccessInterface
+                        ? (FighterDetailsDataAccessInterface) fighterDataAccess
+                        : null;
+
         final SpinFighterPresenter spinPresenter =
                 new SpinFighterPresenter(viewModel);
 
@@ -36,6 +42,7 @@ public final class FighterCreationUseCaseFactory {
                 new SpinFighterInteractor(
                         randomSource,
                         fighterDataAccess,
+                        detailsDataAccess,
                         spinPresenter);
 
         final SpinFighterController spinController =
@@ -48,6 +55,7 @@ public final class FighterCreationUseCaseFactory {
                 new RerollFighterInteractor(
                         randomSource,
                         fighterDataAccess,
+                        detailsDataAccess,
                         rerollPresenter);
 
         final RerollFighterController rerollController =
