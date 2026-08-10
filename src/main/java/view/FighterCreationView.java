@@ -21,6 +21,8 @@ import java.awt.event.MouseEvent;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import interface_adapter.fighter_creation.AssignAttributeController;
 import interface_adapter.fighter_creation.FighterCreationViewModel;
@@ -30,12 +32,21 @@ import interface_adapter.fighter_creation.SpinFighterController;
 /** View for building a custom fighter. */
 public final class FighterCreationView extends JPanel implements PropertyChangeListener {
 
+    private JLabel rerollsLabel;
+    private JLabel fighterNameLabel;
+    private JLabel fighterDetailsLabel;
     private Attribute selectedAttribute;
     private JPanel selectedRow;
     private final SpinFighterController spinFighterController;
     private final RerollFighterController rerollFighterController;
     private final AssignAttributeController assignAttributeController;
     private final FighterCreationViewModel viewModel;
+    private final Map<Attribute, JLabel> assignedLabels = new HashMap<>();
+    private final Map<Attribute, JProgressBar> statBars = new HashMap<>();
+    private final Map<Attribute, JLabel> statLabels = new HashMap<>();private JLabel attributesLabel;
+
+
+
 
     public FighterCreationView(SpinFighterController spinFighterController,
         RerollFighterController rerollFighterController,
@@ -60,8 +71,10 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
 
         final JPanel progressPanel = UfcTheme.panel(null);
         progressPanel.setLayout(new BoxLayout(progressPanel, BoxLayout.Y_AXIS));
-        progressPanel.add(UfcTheme.body("Attributes: 3 / 6"));
-        progressPanel.add(UfcTheme.body("Rerolls: 1"));
+        attributesLabel = UfcTheme.body("Attributes: 0 / 6");
+        rerollsLabel = UfcTheme.body("Rerolls: 0");
+        progressPanel.add(attributesLabel);
+        progressPanel.add(rerollsLabel);
         header.add(progressPanel, BorderLayout.EAST);
         add(header, BorderLayout.NORTH);
 
@@ -132,6 +145,7 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
         actions.add(assign);
         actions.add(next);
         add(actions, BorderLayout.SOUTH);
+        updateView();
     }
 
     private JPanel createBuildPanel() {
@@ -142,12 +156,8 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
         final JPanel rows = UfcTheme.panel(null);
         rows.setLayout(new BoxLayout(rows, BoxLayout.Y_AXIS));
 
-        final String[] sources = {
-                "Max Holloway", "Khabib Nurmagomedov", "Georges St-Pierre", "—", "—", "—"
-        };
-        final int[] values = {91, 95, 94, 0, 0, 0};
 
-        int index = 0;
+
         for (Attribute attribute : Attribute.values()) {
             final JPanel row = UfcTheme.panel(new BorderLayout(12, 0));
             row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 68));
@@ -159,13 +169,12 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
             name.setFont(UfcTheme.BODY_BOLD);
             name.setForeground(UfcTheme.TEXT);
 
-            final String valueText = values[index] == 0 ? "--" : Integer.toString(values[index]);
-            final JLabel value = UfcTheme.body(valueText + "   " + sources[index]);
+            final JLabel value = UfcTheme.body("--   —");
+            assignedLabels.put(attribute, value);
 
             row.add(name, BorderLayout.WEST);
             row.add(value, BorderLayout.EAST);
             rows.add(row);
-            index++;
         }
 
         panel.add(rows, BorderLayout.CENTER);
@@ -180,24 +189,23 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
         final JPanel fighterInfo = UfcTheme.panel(null);
         fighterInfo.setLayout(new BoxLayout(fighterInfo, BoxLayout.Y_AXIS));
 
-        final JLabel fighter = new JLabel("Islam Makhachev");
-        fighter.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 34));
-        fighter.setForeground(UfcTheme.TEXT);
+        fighterNameLabel = new JLabel("Spin a fighter");
+        fighterNameLabel.setFont(
+                new Font(Font.SANS_SERIF, Font.BOLD, 34)
+        );
+        fighterNameLabel.setForeground(UfcTheme.TEXT);
 
-        fighterInfo.add(fighter);
-        fighterInfo.add(UfcTheme.body("Lightweight • 28-1 • Modern Era"));
+        fighterDetailsLabel = UfcTheme.body("");
+
+        fighterInfo.add(fighterNameLabel);
+        fighterInfo.add(fighterDetailsLabel);
         fighterHeader.add(fighterInfo, BorderLayout.WEST);
 
-        final JLabel overall = UfcTheme.centeredLabel(
-                "96", new Font(Font.SANS_SERIF, Font.BOLD, 38), UfcTheme.ACCENT);
-        fighterHeader.add(overall, BorderLayout.EAST);
         panel.add(fighterHeader, BorderLayout.NORTH);
 
         final JPanel stats = UfcTheme.panel(null);
         stats.setLayout(new BoxLayout(stats, BoxLayout.Y_AXIS));
 
-        final int[] values = {88, 97, 96, 74, 70, 89};
-        int index = 0;
 
         for (final Attribute attribute : Attribute.values()) {
             final JPanel row = UfcTheme.panel(new BorderLayout(10, 0));
@@ -206,8 +214,11 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
             final JLabel label = UfcTheme.body(attribute.getDisplayName());
             label.setPreferredSize(new Dimension(150, 24));
 
-            final JProgressBar bar = UfcTheme.statBar(values[index]);
-            final JLabel value = UfcTheme.body(Integer.toString(values[index]));
+            final JProgressBar bar = UfcTheme.statBar(0);
+            final JLabel value = UfcTheme.body("--");
+
+            statBars.put(attribute, bar);
+            statLabels.put(attribute, value);
 
             row.addMouseListener(new MouseAdapter() {
                 @Override
@@ -226,16 +237,77 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
             row.add(bar, BorderLayout.CENTER);
             row.add(value, BorderLayout.EAST);
             stats.add(row);
-            index++;
         }
 
         panel.add(stats, BorderLayout.CENTER);
         return panel;
     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent event) {
+    private void updateView() {
+        attributesLabel.setText("Attributes: " + viewModel.getAttributesFilled() + " / " + Attribute.values().length);
+
+        rerollsLabel.setText(
+                "Rerolls: " + viewModel.getRerollsLeft()
+        );
+
+        if (viewModel.isFighterRevealed()) {
+            fighterNameLabel.setText(
+                    viewModel.getFighterName()
+            );
+
+            fighterDetailsLabel.setText(
+                    viewModel.getFighterDetails()
+            );
+        }
+        else {
+            fighterNameLabel.setText("Spin a fighter");
+            fighterDetailsLabel.setText("");
+        }
+
+        for (Attribute attribute : Attribute.values()) {
+            final String key = attribute.getDisplayName();
+
+            final Integer stat =
+                    viewModel.getFighterStats().get(key);
+
+            if (stat == null) {
+                statBars.get(attribute).setValue(0);
+                statLabels.get(attribute).setText("--");
+            }
+            else {
+                statBars.get(attribute).setValue(stat);
+                statLabels.get(attribute).setText(
+                        Integer.toString(stat)
+                );
+            }
+
+            final Integer assignedValue =
+                    viewModel.getAssignedValues().get(key);
+
+            final String source =
+                    viewModel.getAssignedFighters().get(key);
+
+            if (assignedValue == null) {
+                assignedLabels.get(attribute)
+                        .setText("--   —");
+            }
+            else {
+                assignedLabels.get(attribute).setText(
+                        assignedValue
+                                + "   "
+                                + (source == null ? "—" : source)
+                );
+            }
+        }
+
         revalidate();
         repaint();
     }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent event) {
+        updateView();
+    }
+
+
 }
