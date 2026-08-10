@@ -31,6 +31,7 @@ public class SpinFighterPresenter implements SpinFighterOutputBoundary {
         final String details = fighter.getProfessionalRecord()
                 + " • " + fighter.getWeightClass().getDisplayName();
 
+        viewModel.setCurrentFighter(fighter);
         viewModel.setRolledFighter(fighter.getName(), details, stats);
     }
 }

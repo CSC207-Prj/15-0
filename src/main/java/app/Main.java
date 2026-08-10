@@ -12,14 +12,11 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import java.awt.Dimension;
+import data_access.InMemoryFighterDataAccessObject;
+import interface_adapter.fighter_creation.FighterCreationViewModel;
+import interface_adapter.game_setting.GameSettingViewModel;
+import use_case.fighter_creation.FighterDataAccessInterface;
 
-/**
- * Stage 2 preview application.
- *
- * <p>All screens are wired for navigation, but there are intentionally no
- * interactors, controllers, presenters, gateways, API calls, persistence, or
- * user-story business rules yet.</p>
- */
 public final class Main {
     private Main() {
     }
@@ -40,13 +37,37 @@ public final class Main {
                 () -> navigation.setActiveView(ViewNames.SAVED_FIGHTERS),
                 () -> navigation.setActiveView(ViewNames.FIGHTER_BROWSER),
                 () -> System.exit(0));
-        final GameSettingsView settings = new GameSettingsView(
-                () -> navigation.setActiveView(ViewNames.WELCOME),
-                () -> navigation.setActiveView(ViewNames.FIGHTER_CREATION));
-        final FighterCreationView fighterCreation = new FighterCreationView(
+        final FighterDataAccessInterface fighterDataAccess =
+                new InMemoryFighterDataAccessObject();
+
+        final GameSettingViewModel gameSettingViewModel =
+                new GameSettingViewModel();
+
+        final FighterCreationViewModel fighterCreationViewModel =
+                new FighterCreationViewModel();
+
+        final FighterCreationView fighterCreation = FighterCreationUseCaseFactory.create(
+                fighterDataAccess,
+                new JavaRandomSource(),
+                fighterCreationViewModel,
                 () -> navigation.setActiveView(ViewNames.SETTINGS),
                 () -> navigation.setActiveView(ViewNames.CHARACTER_OVERVIEW));
-        final ConfirmView overview = new ConfirmView(
+
+        final GameSettingsView settings = GameSettingUseCaseFactory.create(
+                fighterDataAccess,
+                gameSettingViewModel,
+                () -> navigation.setActiveView(ViewNames.WELCOME),
+                () -> {
+                    if (gameSettingViewModel.getState().isConfigured()) {
+                        fighterCreationViewModel.initializeRun(
+                                gameSettingViewModel.getState().getSettings(),
+                                gameSettingViewModel.getState().getCustomFighter());
+
+                        navigation.setActiveView(ViewNames.FIGHTER_CREATION);
+                    }
+                });
+
+        final ConfirmView overview = ConfirmUseCaseFactory.create(
                 () -> navigation.setActiveView(ViewNames.FIGHTER_CREATION),
                 () -> navigation.setActiveView(ViewNames.SIMULATION));
 

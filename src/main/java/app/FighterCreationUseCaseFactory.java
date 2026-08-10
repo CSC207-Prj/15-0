@@ -25,11 +25,9 @@ public final class FighterCreationUseCaseFactory {
     public static FighterCreationView create(
             FighterDataAccessInterface fighterDataAccess,
             RandomSource randomSource,
+            FighterCreationViewModel viewModel,
             Runnable backAction,
             Runnable continueAction) {
-
-        final FighterCreationViewModel viewModel =
-                new FighterCreationViewModel();
 
         final SpinFighterPresenter spinPresenter =
                 new SpinFighterPresenter(viewModel);

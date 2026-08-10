@@ -19,11 +19,9 @@ public final class GameSettingUseCaseFactory {
 
     public static GameSettingsView create(
             FighterDataAccessInterface fighterDataAccess,
+            GameSettingViewModel viewModel,
             Runnable backAction,
             Runnable continueAction) {
-
-        final GameSettingViewModel viewModel =
-                new GameSettingViewModel();
 
         final GameSettingOutputBoundary presenter =
                 new GameSettingPresenter(viewModel);
