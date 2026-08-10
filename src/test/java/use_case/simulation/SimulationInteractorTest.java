@@ -19,6 +19,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SimulationInteractorTest {
@@ -58,6 +60,132 @@ class SimulationInteractorTest {
         assertEquals(15, run.getFightHistory().size());
         assertEquals(15, run.getPlayer().getRecord().getWins());
         assertEquals(15, presenter.output.getFightHistory().size());
+    }
+
+    @Test
+    void missingRunIsPresentedAsFailure() {
+        final CapturingPresenter presenter = new CapturingPresenter();
+        final SimulationInteractor interactor = new SimulationInteractor(
+                new InMemorySimulationDataAccessObject(),
+                alwaysWinByDecision(), presenter);
+
+        interactor.execute(new SimulationInputData(
+                SimulationInputData.Action.LOAD));
+
+        assertNull(presenter.output);
+        assertEquals(
+                "No active gauntlet exists. Finalize a fighter before starting the simulation.",
+                presenter.error);
+    }
+
+    @Test
+    void loadPresentsReadyRunWithoutSimulating() {
+        final GameRun run = run();
+        final CapturingPresenter presenter = new CapturingPresenter();
+        final SimulationInteractor interactor = new SimulationInteractor(
+                new InMemorySimulationDataAccessObject(run),
+                (player, opponent, maxRounds, difficulty) -> {
+                    throw new AssertionError("Load must not simulate");
+                }, presenter);
+
+        interactor.execute(new SimulationInputData(
+                SimulationInputData.Action.LOAD));
+
+        assertEquals("Ready for the next fight.", presenter.output.getMessage());
+        assertEquals(SimulationOutputData.OpponentStatus.NEXT,
+                presenter.output.getOpponents().get(0).status());
+        assertEquals(SimulationOutputData.OpponentStatus.PENDING,
+                presenter.output.getOpponents().get(1).status());
+        assertEquals(0, presenter.output.getFightHistory().size());
+    }
+
+    @Test
+    void lossUpdatesRecordAndOpponentStatus() {
+        final GameRun run = run();
+        final CapturingPresenter presenter = new CapturingPresenter();
+        final FightSimulator alwaysLose = (player, opponent, maxRounds, difficulty) ->
+                new FightResult(opponent, false, FightMethod.KO_TKO, 1, 15);
+
+        new SimulationInteractor(
+                new InMemorySimulationDataAccessObject(run),
+                alwaysLose, presenter).execute(new SimulationInputData(
+                SimulationInputData.Action.SIMULATE_NEXT));
+
+        assertEquals(0, run.getPlayer().getRecord().getWins());
+        assertEquals(1, run.getPlayer().getRecord().getLosses());
+        assertEquals(SimulationOutputData.OpponentStatus.LOSS,
+                presenter.output.getOpponents().get(0).status());
+        assertEquals(SimulationOutputData.OpponentStatus.NEXT,
+                presenter.output.getOpponents().get(1).status());
+    }
+
+    @Test
+    void completedRunDoesNotSimulateAgain() {
+        final GameRun run = run();
+        while (!run.isComplete()) {
+            run.recordResult(alwaysWinByDecision().simulate(
+                    run.getPlayer(), run.getCurrentOpponent(),
+                    run.getRoundsPerFight(), run.getDifficulty()));
+        }
+        final CapturingPresenter presenter = new CapturingPresenter();
+        final FightSimulator forbidden = (player, opponent, maxRounds, difficulty) -> {
+            throw new AssertionError("Completed run must not simulate");
+        };
+        final SimulationInteractor interactor = new SimulationInteractor(
+                new InMemorySimulationDataAccessObject(run), forbidden, presenter);
+
+        interactor.execute(new SimulationInputData(
+                SimulationInputData.Action.SIMULATE_NEXT));
+        assertEquals("Gauntlet complete.", presenter.output.getMessage());
+        assertNull(presenter.output.getCurrentOpponent());
+
+        interactor.execute(new SimulationInputData(
+                SimulationInputData.Action.AUTO_SIMULATE));
+        assertEquals("Gauntlet complete.", presenter.output.getMessage());
+
+        interactor.execute(new SimulationInputData(
+                SimulationInputData.Action.LOAD));
+        assertEquals("Gauntlet complete.", presenter.output.getMessage());
+    }
+
+    @Test
+    void invalidSimulationResultIsPresentedAsFailure() {
+        final GameRun run = run();
+        final CapturingPresenter presenter = new CapturingPresenter();
+        final RealFighter wrongOpponent =
+                DemoRankingsFactory.createDivision(WeightClass.WELTERWEIGHT)
+                        .getRankedFighters().get(0);
+
+        new SimulationInteractor(
+                new InMemorySimulationDataAccessObject(run),
+                (player, opponent, maxRounds, difficulty) ->
+                        new FightResult(wrongOpponent, true,
+                                FightMethod.DECISION, 3, 300),
+                presenter).execute(new SimulationInputData(
+                SimulationInputData.Action.SIMULATE_NEXT));
+
+        assertEquals("Result does not match the current opponent.",
+                presenter.error);
+    }
+
+    @Test
+    void constructorAndExecuteRejectNullDependenciesAndInput() {
+        final CapturingPresenter presenter = new CapturingPresenter();
+        final InMemorySimulationDataAccessObject dataAccess =
+                new InMemorySimulationDataAccessObject(run());
+
+        assertThrows(NullPointerException.class,
+                () -> new SimulationInteractor(
+                        null, alwaysWinByDecision(), presenter));
+        assertThrows(NullPointerException.class,
+                () -> new SimulationInteractor(dataAccess, null, presenter));
+        assertThrows(NullPointerException.class,
+                () -> new SimulationInteractor(
+                        dataAccess, alwaysWinByDecision(), null));
+        assertThrows(NullPointerException.class,
+                () -> new SimulationInteractor(
+                        dataAccess, alwaysWinByDecision(), presenter)
+                        .execute(null));
     }
 
     private FightSimulator alwaysWinByDecision() {
@@ -102,6 +230,7 @@ class SimulationInteractorTest {
     private static final class CapturingPresenter
             implements SimulationOutputBoundary {
         private SimulationOutputData output;
+        private String error;
 
         @Override
         public void prepareSuccessView(SimulationOutputData outputData) {
@@ -110,7 +239,7 @@ class SimulationInteractorTest {
 
         @Override
         public void prepareFailView(String errorMessage) {
-            throw new AssertionError(errorMessage);
+            error = errorMessage;
         }
     }
 }
