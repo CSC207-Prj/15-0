@@ -4,6 +4,7 @@ import entity.CustomFighter;
 import entity.GameRun;
 import org.junit.jupiter.api.Test;
 import use_case.fighter_creation.FighterDataAccessInterface;
+import use_case.fighter_creation.FighterDetailsDataAccessInterface;
 
 import java.util.List;
 
@@ -53,6 +54,36 @@ class DataAccessImplementationsTest {
 
         assertSame(expected,
                 new FighterBrowserDataAccessAdapter(delegate).getFighters());
+    }
+
+    @Test
+    void browserAdapterDelegatesOptionalDetailLoading() {
+        final entity.RealFighter basic =
+                new InMemoryFighterDataAccessObject().getFighters().get(0);
+        final entity.RealFighter detailed =
+                new InMemoryFighterDataAccessObject().getFighters().get(1);
+        final class DetailCatalogue implements FighterDataAccessInterface,
+                FighterDetailsDataAccessInterface {
+            @Override
+            public List<entity.RealFighter> getFighters() {
+                return List.of(basic);
+            }
+
+            @Override
+            public entity.RealFighter getFighterDetails(
+                    entity.RealFighter fighter) {
+                assertSame(basic, fighter);
+                return detailed;
+            }
+        }
+
+        final FighterBrowserDataAccessAdapter adapter =
+                new FighterBrowserDataAccessAdapter(new DetailCatalogue());
+        assertSame(detailed, adapter.getFighterDetails(basic));
+
+        final FighterBrowserDataAccessAdapter plainAdapter =
+                new FighterBrowserDataAccessAdapter(() -> List.of(basic));
+        assertSame(basic, plainAdapter.getFighterDetails(basic));
     }
 
     @Test
