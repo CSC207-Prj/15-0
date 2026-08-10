@@ -1,8 +1,10 @@
 package view;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JList;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -10,6 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicArrowButton;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 import java.awt.Color;
 import java.awt.Component;
@@ -114,7 +118,37 @@ public final class UfcTheme {
         combo.setFont(BODY);
         combo.setForeground(TEXT);
         combo.setBackground(PANEL_ALT);
+        combo.setOpaque(true);
         combo.setFocusable(false);
+        // The native macOS look-and-feel paints its own white control and
+        // ignores setBackground, which left white text on a white box. Using
+        // the basic UI with a themed arrow button makes the combo honour the
+        // theme colours on every platform.
+        combo.setUI(new BasicComboBoxUI() {
+            @Override
+            protected JButton createArrowButton() {
+                final BasicArrowButton arrow = new BasicArrowButton(
+                        BasicArrowButton.SOUTH, PANEL_ALT, PANEL_ALT, TEXT, PANEL_ALT);
+                arrow.setBorder(BorderFactory.createEmptyBorder());
+                return arrow;
+            }
+        });
+        combo.setBorder(BorderFactory.createLineBorder(BORDER));
+        combo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public java.awt.Component getListCellRendererComponent(
+                    JList<?> list, Object value, int index,
+                    boolean isSelected, boolean cellHasFocus) {
+                final JLabel label = (JLabel) super.getListCellRendererComponent(
+                        list, value, index, isSelected, cellHasFocus);
+                label.setOpaque(true);
+                label.setFont(BODY);
+                label.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
+                label.setBackground(isSelected ? ACCENT : PANEL_ALT);
+                label.setForeground(TEXT);
+                return label;
+            }
+        });
         return combo;
     }
 
