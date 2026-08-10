@@ -48,6 +48,7 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
         this.rerollFighterController = rerollFighterController;
         this.assignAttributeController = assignAttributeController;
         this.viewModel = viewModel;
+        this.viewModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout());
         setBackground(UfcTheme.BACKGROUND);
@@ -84,6 +85,37 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
             @Override
             public void actionPerformed(ActionEvent event) {
                 backAction.run();
+            }
+        });
+        spin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                spinFighterController.execute(
+                        viewModel.getGameSettings().getEra()
+                );
+            }
+        });
+
+        reroll.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                rerollFighterController.execute(
+                        viewModel.getGameSettings().getEra(),
+                        viewModel.getRerollsLeft(),
+                        viewModel.getCurrentFighter()
+                );
+            }
+        });
+
+        assign.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                assignAttributeController.execute(
+                        viewModel.getCustomFighter(),
+                        viewModel.getCurrentFighter(),
+                        selectedAttribute,
+                        viewModel.getGameSettings().getEra()
+                );
             }
         });
 

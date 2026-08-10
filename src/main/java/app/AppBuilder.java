@@ -5,30 +5,15 @@ import view.FighterCreationView;
 import javax.swing.JFrame;
 
 /**
- * Builds and connects the application views and their dependencies.
+ * Builds the application frame.
  */
 public class AppBuilder {
 
     private FighterCreationView fighterCreationView;
 
-    public AppBuilder addFighterCreationView() {
-        final Runnable backAction = new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Back to Settings");
-            }
-        };
-
-        final Runnable continueAction = new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Continue");
-            }
-        };
-
-        fighterCreationView =
-                new FighterCreationView(backAction, continueAction);
-
+    public AppBuilder addFighterCreationView(
+            FighterCreationView fighterCreationView) {
+        this.fighterCreationView = fighterCreationView;
         return this;
     }
 

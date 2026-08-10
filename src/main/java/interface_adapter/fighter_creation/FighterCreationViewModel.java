@@ -1,20 +1,18 @@
 package interface_adapter.fighter_creation;
 
+import entity.CustomFighter;
+import entity.GameSettings;
+import entity.RealFighter;
 import interface_adapter.ViewModel;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import entity.RealFighter;
 
 /**
  * Stores the data displayed by the fighter creation view.
  */
 public class FighterCreationViewModel extends ViewModel {
-
-    public FighterCreationViewModel() {
-        super("Fighter Creation");
-    }
 
     private String fighterName = "";
     private String fighterDetails = "";
@@ -29,7 +27,44 @@ public class FighterCreationViewModel extends ViewModel {
     private int rerollsLeft;
     private boolean fighterRevealed;
 
-    public void setRolledFighter(String name, String details, int overall, Map<String, Integer> stats) {
+    private GameSettings gameSettings;
+    private CustomFighter customFighter;
+
+    public FighterCreationViewModel() {
+        super("Fighter Creation");
+    }
+
+    public void initializeRun(GameSettings gameSettings,
+                              CustomFighter customFighter) {
+        this.gameSettings = gameSettings;
+        this.customFighter = customFighter;
+
+        startNewRun(
+                gameSettings.getDifficulty().getRerollLimit()
+        );
+    }
+
+    public void startNewRun(int initialRerolls) {
+        fighterName = "";
+        fighterDetails = "";
+        overall = 0;
+        currentFighter = null;
+        errorMessage = "";
+
+        fighterStats.clear();
+        assignedValues.clear();
+        assignedFighters.clear();
+
+        rerollsLeft = initialRerolls;
+        fighterRevealed = false;
+
+        firePropertyChanged(null, this);
+    }
+
+    public void setRolledFighter(String name,
+                                 String details,
+                                 int overall,
+                                 Map<String, Integer> stats) {
         this.fighterName = name;
         this.fighterDetails = details;
         this.overall = overall;
@@ -41,7 +76,9 @@ public class FighterCreationViewModel extends ViewModel {
         firePropertyChanged(null, this);
     }
 
-    public void setAssignedAttribute(String attribute, int value, String fighterName) {
+    public void setAssignedAttribute(String attribute,
+                                     int value,
+                                     String fighterName) {
         assignedValues.put(attribute, value);
         assignedFighters.put(attribute, fighterName);
         firePropertyChanged(null, this);
@@ -96,7 +133,9 @@ public class FighterCreationViewModel extends ViewModel {
         return fighterRevealed;
     }
 
-    public void setRolledFighter(String name, String details, Map<String, Integer> stats) {
+    public void setRolledFighter(String name,
+                                 String details,
+                                 Map<String, Integer> stats) {
         this.fighterName = name;
         this.fighterDetails = details;
 
@@ -114,5 +153,13 @@ public class FighterCreationViewModel extends ViewModel {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
         firePropertyChanged(null, this);
+    }
+
+    public GameSettings getGameSettings() {
+        return gameSettings;
+    }
+
+    public CustomFighter getCustomFighter() {
+        return customFighter;
     }
 }
