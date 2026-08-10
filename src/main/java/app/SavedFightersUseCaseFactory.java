@@ -39,12 +39,12 @@ public final class SavedFightersUseCaseFactory {
             LoadFighterDataAccessInterface loadFighterDataAccess,
             ExhibitionDataAccessInterface exhibitionDataAccess,
             RandomSource randomSource,
+            SavedFightersViewModel viewModel,
             Runnable backHomeAction) {
 
         Objects.requireNonNull(viewRosterDataAccess, "viewRosterDataAccess");
         Objects.requireNonNull(randomSource, "randomSource");
-
-        final SavedFightersViewModel viewModel = new SavedFightersViewModel();
+        Objects.requireNonNull(viewModel, "viewModel");
 
         final ViewRosterController viewRosterController = new ViewRosterController(
                 new ViewRosterInteractor(viewRosterDataAccess, new ViewRosterPresenter(viewModel)));

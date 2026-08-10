@@ -24,11 +24,15 @@ import interface_adapter.confirm_fighter.ConfirmState;
 import interface_adapter.confirm_fighter.ConfirmViewModel;
 import interface_adapter.fighter_creation.FighterCreationViewModel;
 import interface_adapter.game_setting.GameSettingViewModel;
+import interface_adapter.saved_fighters.SaveFighterController;
+import interface_adapter.saved_fighters.SaveFighterPresenter;
+import interface_adapter.saved_fighters.SavedFightersViewModel;
 import use_case.fighter_creation.FighterDataAccessInterface;
 import use_case.confirm.ConfirmInputBoundary;
 import use_case.confirm.ConfirmInteractor;
 import use_case.confirm.ConfirmOutputBoundary;
 import use_case.confirm.ConfirmRunDataAccessInterface;
+import use_case.save_fighter.SaveFighterInteractor;
 import interface_adapter.confirm_fighter.ConfirmController;
 import interface_adapter.confirm_fighter.ConfirmPresenter;
 
@@ -91,13 +95,28 @@ public final class Main {
                     }
                 });
 
+        final JsonFighterRosterDataAccess fighterRoster =
+                new JsonFighterRosterDataAccess("saved_fighters.json");
+        final SavedFightersViewModel savedFightersViewModel =
+                new SavedFightersViewModel();
+        final SaveFighterController saveFighterController =
+                new SaveFighterController(new SaveFighterInteractor(
+                        fighterRoster,
+                        new SaveFighterPresenter(savedFightersViewModel)));
+
         final InMemorySimulationDataAccessObject simulationDataAccess =
                 new InMemorySimulationDataAccessObject();
         final SimulationView simulation = SimulationUseCaseFactory.create(
                 simulationDataAccess,
                 new JavaRandomSource(),
                 () -> navigation.setActiveView(ViewNames.WELCOME),
-                () -> navigation.setActiveView(ViewNames.SAVED_FIGHTERS));
+                () -> {
+                    final GameRun completedRun = simulationDataAccess.getGameRun();
+                    if (completedRun != null && completedRun.isComplete()) {
+                        saveFighterController.execute(completedRun.getPlayer());
+                        navigation.setActiveView(ViewNames.SAVED_FIGHTERS);
+                    }
+                });
 
         final ConfirmRunDataAccessInterface confirmRunDataAccess =
                 new ConfirmRunDataAccessInterface() {
@@ -138,11 +157,10 @@ public final class Main {
                     navigation.setActiveView(ViewNames.SIMULATION);
                 });
 
-        final JsonFighterRosterDataAccess fighterRoster =
-                new JsonFighterRosterDataAccess("saved_fighters.json");
         final SavedFightersView savedFighters = SavedFightersUseCaseFactory.create(
                 fighterRoster, fighterRoster, fighterRoster, fighterRoster,
                 new JavaRandomSource(),
+                savedFightersViewModel,
                 () -> navigation.setActiveView(ViewNames.WELCOME));
         final FighterBrowserView fighterBrowser = new FighterBrowserView(
                 () -> navigation.setActiveView(ViewNames.WELCOME));
