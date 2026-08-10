@@ -19,12 +19,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 
+import entity.CustomFighter;
 import interface_adapter.saved_fighters.DeleteFighterController;
 import interface_adapter.saved_fighters.ExhibitionController;
 import interface_adapter.saved_fighters.LoadFighterController;
+import interface_adapter.saved_fighters.SaveFighterController;
 import interface_adapter.saved_fighters.SavedFighterRow;
 import interface_adapter.saved_fighters.SavedFightersState;
 import interface_adapter.saved_fighters.SavedFightersViewModel;
@@ -42,6 +46,7 @@ public final class SavedFightersView extends JPanel implements PropertyChangeLis
     private final DeleteFighterController deleteFighterController;
     private final LoadFighterController loadFighterController;
     private final ExhibitionController exhibitionController;
+    private final SaveFighterController saveFighterController;
 
     private final JPanel rosterPanel = UfcTheme.panel(null);
     private final JPanel topThreePanel = UfcTheme.panel(null);
@@ -58,12 +63,14 @@ public final class SavedFightersView extends JPanel implements PropertyChangeLis
                              DeleteFighterController deleteFighterController,
                              LoadFighterController loadFighterController,
                              ExhibitionController exhibitionController,
+                             SaveFighterController saveFighterController,
                              SavedFightersViewModel viewModel,
                              Runnable backAction) {
         this.viewRosterController = Objects.requireNonNull(viewRosterController);
         this.deleteFighterController = Objects.requireNonNull(deleteFighterController);
         this.loadFighterController = Objects.requireNonNull(loadFighterController);
         this.exhibitionController = Objects.requireNonNull(exhibitionController);
+        this.saveFighterController = Objects.requireNonNull(saveFighterController);
         this.viewModel = Objects.requireNonNull(viewModel);
         this.viewModel.addPropertyChangeListener(this);
 
@@ -187,8 +194,41 @@ public final class SavedFightersView extends JPanel implements PropertyChangeLis
         exhibitionResultLabel.setText(orSpace(state.getExhibitionResult()));
         messageLabel.setText(orSpace(state.getMessage()));
         errorLabel.setText(orSpace(state.getError()));
+        offerRenameForDuplicate(state);
         revalidate();
         repaint();
+    }
+
+    /**
+     * When a save failed because the name is taken, asks the user for a
+     * different name and retries the save. The pending fighter is cleared
+     * from the state first so repeated refreshes cannot re-open the dialog.
+     */
+    private void offerRenameForDuplicate(SavedFightersState state) {
+        final CustomFighter pending = state.getDuplicatePending();
+        if (pending == null) {
+            return;
+        }
+        state.setDuplicatePending(null);
+        SwingUtilities.invokeLater(() -> {
+            final String newName = (String) JOptionPane.showInputDialog(
+                    this,
+                    "A fighter named \"" + pending.getName() + "\" is already in your roster.\n"
+                            + "Choose a different name to save this fighter:",
+                    "Name already taken",
+                    JOptionPane.WARNING_MESSAGE,
+                    null, null,
+                    pending.getName());
+            if (newName == null || newName.trim().isEmpty()
+                    || newName.trim().equals(pending.getName())) {
+                errorLabel.setText("Fighter was not saved — the name \""
+                        + pending.getName() + "\" is already in your roster.");
+                return;
+            }
+            pending.setName(newName.trim());
+            saveFighterController.execute(pending);
+            viewRosterController.execute();
+        });
     }
 
     private void rebuildRoster(List<SavedFighterRow> rows) {

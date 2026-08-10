@@ -3,6 +3,8 @@ package interface_adapter.saved_fighters;
 import java.util.ArrayList;
 import java.util.List;
 
+import entity.CustomFighter;
+
 /**
  * Stores the information displayed by the Saved Fighters screen: the ranked
  * roster, the top-three highlight, the latest loaded fighter and exhibition
@@ -15,6 +17,7 @@ public class SavedFightersState {
     private String exhibitionResult = "";
     private String message = "";
     private String error = "";
+    private CustomFighter duplicatePending;
 
     public List<SavedFighterRow> getRows() {
         return new ArrayList<>(rows);
@@ -62,5 +65,18 @@ public class SavedFightersState {
 
     public void setError(String error) {
         this.error = error == null ? "" : error;
+    }
+
+    /**
+     * Returns the fighter whose save failed because its name is taken, so
+     * the view can offer a rename and retry. Null when nothing is pending.
+     * @return the unsaved fighter, or null
+     */
+    public CustomFighter getDuplicatePending() {
+        return duplicatePending;
+    }
+
+    public void setDuplicatePending(CustomFighter duplicatePending) {
+        this.duplicatePending = duplicatePending;
     }
 }

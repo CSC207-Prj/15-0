@@ -30,8 +30,8 @@ public class SaveFighterInteractor implements SaveFighterInputBoundary {
             presenter.prepareFailView("All six attributes must be assigned before saving.");
         }
         else if (rosterDataAccess.existsByName(fighter.getName())) {
-            presenter.prepareFailView(
-                    "A fighter named \"" + fighter.getName() + "\" is already in your roster.");
+            presenter.prepareDuplicateNameView(
+                    new SaveFighterOutputData(fighter.getName(), true, fighter));
         }
         else {
             rosterDataAccess.save(fighter);
