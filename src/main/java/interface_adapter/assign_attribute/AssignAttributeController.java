@@ -1,4 +1,4 @@
-package interface_adapter.fighter_creation;
+package interface_adapter.assign_attribute;
 
 import entity.Attribute;
 import entity.CustomFighter;

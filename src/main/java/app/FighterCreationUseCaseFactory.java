@@ -1,7 +1,7 @@
 package app;
 
 import entity.RandomSource;
-import interface_adapter.fighter_creation.AssignAttributeController;
+import interface_adapter.assign_attribute.AssignAttributeController;
 import interface_adapter.fighter_creation.AssignAttributePresenter;
 import interface_adapter.fighter_creation.FighterCreationViewModel;
 import interface_adapter.fighter_creation.RerollFighterController;

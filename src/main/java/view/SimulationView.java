@@ -73,6 +73,13 @@ public final class SimulationView extends JPanel implements PropertyChangeListen
         controller.loadRun();
     }
 
+    /**
+     * Reloads the current GameRun after US3 creates it.
+     */
+    public void refreshRun() {
+        controller.loadRun();
+    }
+
     private JPanel createHeader() {
         final JPanel header = UfcTheme.panel(new BorderLayout());
         header.setBackground(UfcTheme.HEADER);
