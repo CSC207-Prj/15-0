@@ -7,6 +7,7 @@ import entity.UfcEra;
 import entity.WeightClass;
 import org.junit.jupiter.api.Test;
 import use_case.fighter_creation.FighterDataAccessInterface;
+import use_case.fighter_creation.FighterDetailsDataAccessInterface;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -138,6 +139,70 @@ public class RerollFighterInteractorTest {
                         UfcEra.MODERN,
                         0,
                         createFighter("Current Fighter")));
+    }
+
+    @Test
+    public void rerollFailsWhenNoFighterHasBeenSpun() {
+        final RerollFighterOutputBoundary presenter =
+                new RerollFighterOutputBoundary() {
+                    @Override
+                    public void prepareSuccessView(
+                            RerollFighterOutputData outputData) {
+                        fail("Reroll should not succeed.");
+                    }
+
+                    @Override
+                    public void prepareFailView(String errorMessage) {
+                        assertEquals(
+                                "Spin a fighter before rerolling.",
+                                errorMessage);
+                    }
+                };
+
+        new RerollFighterInteractor(
+                new FixedRandomSource(),
+                () -> {
+                    fail("Fighters should not be loaded.");
+                    return List.of();
+                },
+                presenter).execute(new RerollFighterInputData(
+                        UfcEra.ALL_TIME, 1, null));
+    }
+
+    @Test
+    public void rerollHydratesSelectionAndAllowsAllTimePool() {
+        final RealFighter current = createFighter("Current Fighter");
+        final RealFighter basic = new RealFighter(
+                "Early Fighter", WeightClass.WELTERWEIGHT, 0,
+                UfcEra.EARLY_UFC, "2-1",
+                new HashMap<Attribute, Double>());
+        final RealFighter detailed = new RealFighter(
+                "Detailed Early Fighter", WeightClass.WELTERWEIGHT, 0,
+                UfcEra.EARLY_UFC, "20-1",
+                new HashMap<Attribute, Double>());
+        final FighterDetailsDataAccessInterface details = fighter -> {
+            assertEquals(basic, fighter);
+            return detailed;
+        };
+
+        new RerollFighterInteractor(
+                new FixedRandomSource(),
+                () -> List.of(current, basic),
+                details,
+                new RerollFighterOutputBoundary() {
+                    @Override
+                    public void prepareSuccessView(
+                            RerollFighterOutputData outputData) {
+                        assertEquals(detailed, outputData.getFighter());
+                        assertEquals(1, outputData.getRerollsLeft());
+                    }
+
+                    @Override
+                    public void prepareFailView(String errorMessage) {
+                        fail(errorMessage);
+                    }
+                }).execute(new RerollFighterInputData(
+                        UfcEra.ALL_TIME, 2, current));
     }
 
     private static RealFighter createFighter(String name) {

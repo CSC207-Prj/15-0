@@ -7,6 +7,7 @@ import entity.UfcEra;
 import entity.WeightClass;
 import org.junit.jupiter.api.Test;
 import use_case.fighter_creation.FighterDataAccessInterface;
+import use_case.fighter_creation.FighterDetailsDataAccessInterface;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -85,6 +86,29 @@ public class SpinFighterInteractorTest {
 
         interactor.execute(
                 new SpinFighterInputData(UfcEra.MODERN));
+    }
+
+    @Test
+    public void spinHydratesSelectedFighterWhenDetailAccessIsAvailable() {
+        final RealFighter basic =
+                createFighter("Basic Fighter", UfcEra.EARLY_UFC);
+        final RealFighter detailed =
+                createFighter("Detailed Fighter", UfcEra.EARLY_UFC);
+        final FighterDataAccessInterface fighterDataAccess =
+                new FakeFighterDataAccess(List.of(basic));
+        final FighterDetailsDataAccessInterface detailsDataAccess = fighter -> {
+            assertEquals(basic, fighter);
+            return detailed;
+        };
+
+        final SpinFighterInteractor interactor = new SpinFighterInteractor(
+                new FixedRandomSource(),
+                fighterDataAccess,
+                detailsDataAccess,
+                outputData -> assertEquals(
+                        detailed, outputData.getFighter()));
+
+        interactor.execute(new SpinFighterInputData(UfcEra.ALL_TIME));
     }
 
     private static RealFighter createFighter(

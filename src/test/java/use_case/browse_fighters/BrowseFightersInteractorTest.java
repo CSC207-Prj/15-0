@@ -122,6 +122,65 @@ class BrowseFightersInteractorTest {
         assertEquals("Unable to load the fighter catalogue.", presenter.error);
     }
 
+    @Test
+    void selectedFighterIsReplacedByDetailedProfile() {
+        final RealFighter basic = fighter(
+                "Selected", WeightClass.LIGHTWEIGHT, UfcEra.MODERN, 4);
+        final RealFighter detailed = new RealFighter(
+                "Selected", WeightClass.LIGHTWEIGHT, 4, UfcEra.MODERN,
+                "25-2", Map.of(Attribute.STRIKING, 99.0));
+        final CapturingPresenter presenter = new CapturingPresenter();
+        final FighterBrowserDataAccessInterface dataAccess =
+                new FighterBrowserDataAccessInterface() {
+                    @Override
+                    public List<RealFighter> getFighters() {
+                        return List.of(basic);
+                    }
+
+                    @Override
+                    public RealFighter getFighterDetails(RealFighter fighter) {
+                        assertEquals(basic, fighter);
+                        return detailed;
+                    }
+                };
+
+        new BrowseFightersInteractor(dataAccess, presenter).execute(
+                new BrowseFightersInputData(
+                        "", null, UfcEra.ALL_TIME, "Selected"));
+
+        assertEquals("25-2", presenter.output.getSelectedFighter()
+                .getProfessionalRecord());
+        assertEquals(99.0, presenter.output.getSelectedFighter()
+                .getAttributes().get(Attribute.STRIKING));
+    }
+
+    @Test
+    void detailFailureKeepsUsableDirectoryProfile() {
+        final RealFighter basic = fighter(
+                "Selected", WeightClass.LIGHTWEIGHT, UfcEra.MODERN, 4);
+        final CapturingPresenter presenter = new CapturingPresenter();
+        final FighterBrowserDataAccessInterface dataAccess =
+                new FighterBrowserDataAccessInterface() {
+                    @Override
+                    public List<RealFighter> getFighters() {
+                        return List.of(basic);
+                    }
+
+                    @Override
+                    public RealFighter getFighterDetails(RealFighter fighter) {
+                        throw new IllegalStateException("details offline");
+                    }
+                };
+
+        new BrowseFightersInteractor(dataAccess, presenter).execute(
+                new BrowseFightersInputData(
+                        "", null, UfcEra.ALL_TIME, "Selected"));
+
+        assertEquals("10-0", presenter.output.getSelectedFighter()
+                .getProfessionalRecord());
+        assertNull(presenter.error);
+    }
+
     private static RealFighter fighter(String name,
                                        WeightClass weightClass,
                                        UfcEra era,
