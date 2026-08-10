@@ -1,17 +1,16 @@
 package data_access;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.EnumMap;
 import java.util.Map;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import entity.Attribute;
 import entity.CustomFighter;
@@ -20,8 +19,8 @@ import entity.WeightClass;
 
 public class JsonFighterRosterDataAccessTest {
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    @TempDir
+    Path folder;
 
     private static CustomFighter fighter(String name, WeightClass weightClass,
                                          int wins, int losses, int finishes, double statValue) {
@@ -35,14 +34,14 @@ public class JsonFighterRosterDataAccessTest {
 
     @Test
     public void savedFightersSurviveARestart() throws Exception {
-        final File file = new File(folder.getRoot(), "saved_fighters.json");
+        final Path file = folder.resolve("saved_fighters.json");
 
-        final JsonFighterRosterDataAccess store = new JsonFighterRosterDataAccess(file.getPath());
+        final JsonFighterRosterDataAccess store = new JsonFighterRosterDataAccess(file.toString());
         store.save(fighter("Iron Mohit", WeightClass.LIGHTWEIGHT, 12, 1, 9, 88.0));
         store.save(fighter("Sandman", null, 3, 0, 1, 71.5));
 
         // fresh instance on the same file, as if the program was reopened
-        final JsonFighterRosterDataAccess reopened = new JsonFighterRosterDataAccess(file.getPath());
+        final JsonFighterRosterDataAccess reopened = new JsonFighterRosterDataAccess(file.toString());
 
         assertEquals(2, reopened.getAllFighters().size());
         assertTrue(reopened.existsByName("iron mohit"));
@@ -62,14 +61,14 @@ public class JsonFighterRosterDataAccessTest {
 
     @Test
     public void deleteIsPersistedAcrossRestarts() {
-        final File file = new File(folder.getRoot(), "saved_fighters.json");
+        final Path file = folder.resolve("saved_fighters.json");
 
-        final JsonFighterRosterDataAccess store = new JsonFighterRosterDataAccess(file.getPath());
+        final JsonFighterRosterDataAccess store = new JsonFighterRosterDataAccess(file.toString());
         store.save(fighter("Keeper", WeightClass.WELTERWEIGHT, 2, 0, 1, 60.0));
         store.save(fighter("Goner", WeightClass.MIDDLEWEIGHT, 1, 1, 0, 55.0));
         store.deleteByName("Goner");
 
-        final JsonFighterRosterDataAccess reopened = new JsonFighterRosterDataAccess(file.getPath());
+        final JsonFighterRosterDataAccess reopened = new JsonFighterRosterDataAccess(file.toString());
 
         assertEquals(1, reopened.getAllFighters().size());
         assertTrue(reopened.existsByName("Keeper"));
@@ -78,9 +77,9 @@ public class JsonFighterRosterDataAccessTest {
 
     @Test
     public void missingFileMeansEmptyRoster() {
-        final File file = new File(folder.getRoot(), "does_not_exist_yet.json");
+        final Path file = folder.resolve("does_not_exist_yet.json");
 
-        final JsonFighterRosterDataAccess store = new JsonFighterRosterDataAccess(file.getPath());
+        final JsonFighterRosterDataAccess store = new JsonFighterRosterDataAccess(file.toString());
 
         assertTrue(store.getAllFighters().isEmpty());
         assertFalse(store.existsByName("Anyone"));

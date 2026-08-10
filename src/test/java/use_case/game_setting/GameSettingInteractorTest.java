@@ -108,6 +108,50 @@ class GameSettingInteractorTest {
         assertNotNull(presenter.errorMessage);
     }
 
+    @Test
+    void nullInputFailsWithoutReadingFighters() {
+        final TestPresenter presenter = new TestPresenter();
+        final GameSettingInteractor interactor = new GameSettingInteractor(
+                () -> fail("Fighter data should not be read"), presenter);
+
+        interactor.execute(null);
+
+        assertEquals("Game settings input is missing.",
+                presenter.errorMessage);
+        assertNull(presenter.outputData);
+    }
+
+    @Test
+    void nullAndEmptyFighterCataloguesFail() {
+        final TestPresenter nullPresenter = new TestPresenter();
+        new GameSettingInteractor(() -> null, nullPresenter).execute(
+                new GameSettingInputData(
+                        Difficulty.NORMAL, 3, UfcEra.ALL_TIME, false));
+        assertEquals("No fighter data is currently available.",
+                nullPresenter.errorMessage);
+
+        final TestPresenter emptyPresenter = new TestPresenter();
+        new GameSettingInteractor(List::of, emptyPresenter).execute(
+                new GameSettingInputData(
+                        Difficulty.NORMAL, 3, UfcEra.ALL_TIME, false));
+        assertEquals("No fighter data is currently available.",
+                emptyPresenter.errorMessage);
+    }
+
+    @Test
+    void selectedEraWithNoEligibleFightersFails() {
+        final TestPresenter presenter = new TestPresenter();
+        new GameSettingInteractor(
+                () -> java.util.Arrays.asList(
+                        null, fighter("Early", UfcEra.EARLY_UFC)),
+                presenter).execute(new GameSettingInputData(
+                        Difficulty.EASY, 1, UfcEra.MODERN, false));
+
+        assertEquals("No fighters are available for the selected UFC era.",
+                presenter.errorMessage);
+        assertNull(presenter.outputData);
+    }
+
     private static RealFighter fighter(String name,
                                        UfcEra era) {
 
