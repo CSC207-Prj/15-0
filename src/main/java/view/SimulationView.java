@@ -50,6 +50,7 @@ public final class SimulationView extends JPanel implements PropertyChangeListen
 
     private final JButton simulateOne = UfcTheme.primaryButton("Simulate Next Fight");
     private final JButton simulateAll = UfcTheme.secondaryButton("Auto Simulate Remaining");
+    private final JButton saveFighter = UfcTheme.primaryButton("Save Fighter");
 
     public SimulationView(SimulationController controller,
                           SimulationViewModel viewModel,
@@ -144,17 +145,16 @@ public final class SimulationView extends JPanel implements PropertyChangeListen
         final JPanel actions = UfcTheme.panel(new FlowLayout(FlowLayout.CENTER, 14, 16));
         actions.setBackground(UfcTheme.HEADER);
 
-        final JButton saved = UfcTheme.secondaryButton("Saved Fighters");
         final JButton home = UfcTheme.secondaryButton("Home");
 
         simulateOne.addActionListener(event -> controller.simulateNextFight());
         simulateAll.addActionListener(event -> controller.autoSimulateRun());
-        saved.addActionListener(event -> savedFightersAction.run());
+        saveFighter.addActionListener(event -> savedFightersAction.run());
         home.addActionListener(event -> backHomeAction.run());
 
         actions.add(simulateOne);
         actions.add(simulateAll);
-        actions.add(saved);
+        actions.add(saveFighter);
         actions.add(home);
         return actions;
     }
@@ -173,6 +173,8 @@ public final class SimulationView extends JPanel implements PropertyChangeListen
 
         simulateOne.setEnabled(state.isSimulationEnabled());
         simulateAll.setEnabled(state.isSimulationEnabled());
+        saveFighter.setEnabled(
+                !state.isSimulationEnabled() && !state.getOpponentRows().isEmpty());
 
         opponentRows.removeAll();
         for (String rowText : state.getOpponentRows()) {
