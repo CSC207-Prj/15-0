@@ -1,4 +1,6 @@
-package interface_adapter;
+package interface_adapter.confirm_fighter;
+
+import interface_adapter.ViewModel;
 
 /**
  * View model for the Confirm Fighter screen.

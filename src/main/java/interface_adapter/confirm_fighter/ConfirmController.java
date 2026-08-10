@@ -1,4 +1,4 @@
-package interface_adapter;
+package interface_adapter.confirm_fighter;
 
 import use_case.confirm.ConfirmInputBoundary;
 import use_case.confirm.ConfirmInputData;
