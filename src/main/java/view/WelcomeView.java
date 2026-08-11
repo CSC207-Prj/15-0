@@ -63,8 +63,10 @@ public final class WelcomeView extends JPanel {
         final JLabel headline = new JLabel("BUILD. FIGHT. GO 15-0.");
         headline.setForeground(UfcTheme.TEXT);
         headline.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 42));
-        final JLabel description = UfcTheme.body(
-                "<html>Draft six attributes from real UFC fighters, lock in a division,<br>and complete all 15 ranked fights.</html>");
+        final JLabel description =
+                UfcTheme.body(
+                "<html>Draft six attributes from real UFC fighters, " +
+                        "lock in a division,<br>and complete all 15 ranked fights.</html>");
 
         small.setAlignmentX(Component.LEFT_ALIGNMENT);
         headline.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -87,13 +89,17 @@ public final class WelcomeView extends JPanel {
         panel.setBorder(UfcTheme.cardBorder());
         panel.add(UfcTheme.section("HOW THE GAUNTLET WORKS"));
         panel.add(Box.createVerticalStrut(18));
-        panel.add(rule("1", "Configure", "Choose difficulty, fight length, UFC era, and stat visibility."));
+        panel.add(rule("1", "Configure", "Choose difficulty, fight length, UFC era, " +
+                "and stat visibility."));
         panel.add(Box.createVerticalStrut(14));
-        panel.add(rule("2", "Draft", "Spin for fighters and assign one source stat to each attribute."));
+        panel.add(rule("2", "Draft",
+                "Spin for fighters and assign one source stat to each attribute."));
         panel.add(Box.createVerticalStrut(14));
-        panel.add(rule("3", "Finalize", "Name the fighter, spin a division, and review the overall."));
+        panel.add(rule("3", "Finalize",
+                "Name the fighter, spin a division, and review the overall."));
         panel.add(Box.createVerticalStrut(14));
-        panel.add(rule("4", "Fight", "Fight rank 15 through rank 1. All 15 fights are completed."));
+        panel.add(rule("4", "Fight",
+                "Fight rank 15 through rank 1. All 15 fights are completed."));
         return panel;
     }
 
