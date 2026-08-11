@@ -1,50 +1,23 @@
 package use_case.reroll_fighter;
 
-import entity.Attribute;
-import entity.RandomSource;
-import entity.RealFighter;
-import entity.UfcEra;
-import entity.WeightClass;
-import org.junit.jupiter.api.Test;
-import use_case.fighter_creation.FighterDataAccessInterface;
-import use_case.fighter_creation.FighterDetailsDataAccessInterface;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.Test;
+
+import entity.Attribute;
+import entity.RandomSource;
+import entity.RealFighter;
+import entity.UfcEra;
+import entity.WeightClass;
+import use_case.fighter_creation.FighterDataAccessInterface;
+import use_case.fighter_creation.FighterDetailsDataAccessInterface;
 
 public class RerollFighterInteractorTest {
-
-    private static class FakeFighterDataAccess
-            implements FighterDataAccessInterface {
-
-        private final List<RealFighter> fighters;
-
-        FakeFighterDataAccess(List<RealFighter> fighters) {
-            this.fighters = fighters;
-        }
-
-        @Override
-        public List<RealFighter> getFighters() {
-            return fighters;
-        }
-    }
-
-    private static class FixedRandomSource implements RandomSource {
-
-        @Override
-        public double nextDouble() {
-            return 0.0;
-        }
-
-        @Override
-        public int nextInt(int bound) {
-            return 0;
-        }
-    }
 
     @Test
     public void rerollSelectsDifferentFighterAndConsumesReroll() {
@@ -213,5 +186,33 @@ public class RerollFighterInteractorTest {
                 UfcEra.MODERN,
                 "10-0",
                 new HashMap<Attribute, Double>());
+    }
+
+    private static class FakeFighterDataAccess
+            implements FighterDataAccessInterface {
+
+        private final List<RealFighter> fighters;
+
+        FakeFighterDataAccess(List<RealFighter> fighters) {
+            this.fighters = fighters;
+        }
+
+        @Override
+        public List<RealFighter> getFighters() {
+            return fighters;
+        }
+    }
+
+    private static final class FixedRandomSource implements RandomSource {
+
+        @Override
+        public double nextDouble() {
+            return 0.0;
+        }
+
+        @Override
+        public int nextInt(int bound) {
+            return 0;
+        }
     }
 }

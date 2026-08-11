@@ -15,6 +15,11 @@ public class SpinFighterController {
         this.interactor = interactor;
     }
 
+    /**
+     * Sends a spin request for the selected era to the interactor.
+     *
+     * @param era selected fighter-pool era
+     */
     public void execute(UfcEra era) {
         final SpinFighterInputData inputData = new SpinFighterInputData(era);
 

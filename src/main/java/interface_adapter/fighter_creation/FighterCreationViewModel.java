@@ -1,13 +1,13 @@
 package interface_adapter.fighter_creation;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import entity.CustomFighter;
 import entity.GameSettings;
 import entity.RealFighter;
 import interface_adapter.ViewModel;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Stores the data displayed by the fighter creation view.
@@ -34,16 +34,27 @@ public class FighterCreationViewModel extends ViewModel {
         super("Fighter Creation");
     }
 
-    public void initializeRun(GameSettings gameSettings,
-                              CustomFighter customFighter) {
-        this.gameSettings = gameSettings;
-        this.customFighter = customFighter;
+    /**
+     * Initializes the view model with the settings and blank fighter for a run.
+     *
+     * @param settings settings selected for the run
+     * @param fighter blank custom fighter being built
+     */
+    public void initializeRun(GameSettings settings,
+                              CustomFighter fighter) {
+        this.gameSettings = settings;
+        this.customFighter = fighter;
 
         startNewRun(
-                gameSettings.getDifficulty().getRerollLimit()
+                settings.getDifficulty().getRerollLimit()
         );
     }
 
+    /**
+     * Clears drafting state and installs the run's initial reroll allowance.
+     *
+     * @param initialRerolls rerolls available at the start of the run
+     */
     public void startNewRun(int initialRerolls) {
         fighterName = "";
         fighterDetails = "";
@@ -61,13 +72,21 @@ public class FighterCreationViewModel extends ViewModel {
         firePropertyChanged(null, this);
     }
 
+    /**
+     * Stores all display data for a newly rolled fighter.
+     *
+     * @param name fighter name
+     * @param details fighter record and weight-class text
+     * @param rating fighter's displayed overall rating
+     * @param stats fighter's displayed attribute values
+     */
     public void setRolledFighter(String name,
                                  String details,
-                                 int overall,
+                                 int rating,
                                  Map<String, Integer> stats) {
         this.fighterName = name;
         this.fighterDetails = details;
-        this.overall = overall;
+        this.overall = rating;
 
         fighterStats.clear();
         fighterStats.putAll(stats);
@@ -76,14 +95,46 @@ public class FighterCreationViewModel extends ViewModel {
         firePropertyChanged(null, this);
     }
 
-    public void setAssignedAttribute(String attribute,
-                                     int value,
-                                     String fighterName) {
-        assignedValues.put(attribute, value);
-        assignedFighters.put(attribute, fighterName);
+    /**
+     * Stores name, details, and attributes for a newly rolled fighter.
+     *
+     * @param name fighter name
+     * @param details fighter record and weight-class text
+     * @param stats fighter's displayed attribute values
+     */
+    public void setRolledFighter(String name,
+                                 String details,
+                                 Map<String, Integer> stats) {
+        this.fighterName = name;
+        this.fighterDetails = details;
+
+        fighterStats.clear();
+        fighterStats.putAll(stats);
+
+        fighterRevealed = true;
         firePropertyChanged(null, this);
     }
 
+    /**
+     * Records an assigned value and the real fighter that supplied it.
+     *
+     * @param attribute assigned attribute's display name
+     * @param value rounded value displayed by the view
+     * @param sourceFighterName real fighter that supplied the value
+     */
+    public void setAssignedAttribute(String attribute,
+                                     int value,
+                                     String sourceFighterName) {
+        assignedValues.put(attribute, value);
+        assignedFighters.put(attribute, sourceFighterName);
+        firePropertyChanged(null, this);
+    }
+
+    /**
+     * Updates the remaining reroll allowance.
+     *
+     * @param rerollsLeft number of rerolls still available
+     */
     public void setRerollsLeft(int rerollsLeft) {
         this.rerollsLeft = rerollsLeft;
         firePropertyChanged(null, this);
@@ -133,23 +184,15 @@ public class FighterCreationViewModel extends ViewModel {
         return fighterRevealed;
     }
 
-    public void setRolledFighter(String name,
-                                 String details,
-                                 Map<String, Integer> stats) {
-        this.fighterName = name;
-        this.fighterDetails = details;
-
-        fighterStats.clear();
-        fighterStats.putAll(stats);
-
-        fighterRevealed = true;
-        firePropertyChanged(null, this);
-    }
-
     public String getErrorMessage() {
         return errorMessage;
     }
 
+    /**
+     * Updates the validation message shown by the fighter-creation view.
+     *
+     * @param errorMessage message to display, or an empty string to clear it
+     */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
         firePropertyChanged(null, this);

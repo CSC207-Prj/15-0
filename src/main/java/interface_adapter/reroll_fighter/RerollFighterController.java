@@ -1,4 +1,4 @@
-package interface_adapter.fighter_creation;
+package interface_adapter.reroll_fighter;
 
 import entity.RealFighter;
 import entity.UfcEra;
@@ -16,8 +16,16 @@ public class RerollFighterController {
         this.interactor = interactor;
     }
 
+    /**
+     * Sends a reroll request to the interactor.
+     *
+     * @param era selected fighter-pool era
+     * @param rerollsLeft rerolls available before this request
+     * @param currentFighter fighter that must be replaced
+     */
     public void execute(UfcEra era, int rerollsLeft, RealFighter currentFighter) {
-        final RerollFighterInputData inputData = new RerollFighterInputData(era, rerollsLeft, currentFighter);
+        final RerollFighterInputData inputData =
+                new RerollFighterInputData(era, rerollsLeft, currentFighter);
 
         interactor.execute(inputData);
     }

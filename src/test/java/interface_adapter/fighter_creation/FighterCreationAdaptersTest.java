@@ -1,5 +1,16 @@
 package interface_adapter.fighter_creation;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.EnumMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+
 import entity.Attribute;
 import entity.CustomFighter;
 import entity.Difficulty;
@@ -8,7 +19,9 @@ import entity.RealFighter;
 import entity.UfcEra;
 import entity.WeightClass;
 import interface_adapter.assign_attribute.AssignAttributeController;
-import org.junit.jupiter.api.Test;
+import interface_adapter.assign_attribute.AssignAttributePresenter;
+import interface_adapter.reroll_fighter.RerollFighterController;
+import interface_adapter.reroll_fighter.RerollFighterPresenter;
 import use_case.assign_attribute.AssignAttributeInputData;
 import use_case.assign_attribute.AssignAttributeOutputData;
 import use_case.reroll_fighter.RerollFighterInputData;
@@ -16,17 +29,10 @@ import use_case.reroll_fighter.RerollFighterOutputData;
 import use_case.spin_fighter.SpinFighterInputData;
 import use_case.spin_fighter.SpinFighterOutputData;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 class FighterCreationAdaptersTest {
+
+    private static final int BULLET_CODE_POINT = 0x2022;
+    private static final String BULLET = Character.toString(BULLET_CODE_POINT);
 
     @Test
     void viewModelInitializesAndResetsRunState() {
@@ -98,7 +104,7 @@ class FighterCreationAdaptersTest {
                 new SpinFighterOutputData(fighter));
         assertEquals(fighter, viewModel.getCurrentFighter());
         assertEquals("Alpha", viewModel.getFighterName());
-        assertEquals("10-0 • Lightweight", viewModel.getFighterDetails());
+        assertEquals("10-0 " + BULLET + " Lightweight", viewModel.getFighterDetails());
         assertEquals(76, viewModel.getFighterStats().get("Striking"));
 
         final RealFighter rerolled = realFighter("Bravo");

@@ -5,5 +5,10 @@ package use_case.assign_attribute;
  */
 public interface AssignAttributeInputBoundary {
 
+    /**
+     * Executes an attribute-assignment request.
+     *
+     * @param inputData selected fighter, custom fighter, attribute, and era
+     */
     void execute(AssignAttributeInputData inputData);
 }

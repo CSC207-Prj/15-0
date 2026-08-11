@@ -1,14 +1,13 @@
 package use_case.spin_fighter;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import entity.RandomSource;
 import entity.RealFighter;
 import entity.UfcEra;
 import use_case.fighter_creation.FighterDataAccessInterface;
 import use_case.fighter_creation.FighterDetailsDataAccessInterface;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SpinFighterInteractor implements SpinFighterInputBoundary {
 
@@ -51,7 +50,4 @@ public class SpinFighterInteractor implements SpinFighterInputBoundary {
         final SpinFighterOutputData outputData = new SpinFighterOutputData(fighter);
         presenter.prepareSuccessView(outputData);
     }
-
-
-
 }

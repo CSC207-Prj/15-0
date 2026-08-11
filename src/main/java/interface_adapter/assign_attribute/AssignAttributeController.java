@@ -18,7 +18,18 @@ public class AssignAttributeController {
         this.interactor = interactor;
     }
 
-    public void execute(CustomFighter customFighter, RealFighter realFighter, Attribute attribute, UfcEra era) {
+    /**
+     * Sends the selected attribute and fighters to the assignment interactor.
+     *
+     * @param customFighter fighter being built
+     * @param realFighter fighter supplying the selected value
+     * @param attribute attribute being assigned
+     * @param era era used for the next automatic spin
+     */
+    public void execute(CustomFighter customFighter,
+                        RealFighter realFighter,
+                        Attribute attribute,
+                        UfcEra era) {
         final AssignAttributeInputData inputData =
                 new AssignAttributeInputData(customFighter, realFighter, attribute, era);
 

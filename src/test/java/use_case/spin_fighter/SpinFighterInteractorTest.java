@@ -1,57 +1,23 @@
 package use_case.spin_fighter;
 
-import entity.Attribute;
-import entity.RandomSource;
-import entity.RealFighter;
-import entity.UfcEra;
-import entity.WeightClass;
-import org.junit.jupiter.api.Test;
-import use_case.fighter_creation.FighterDataAccessInterface;
-import use_case.fighter_creation.FighterDetailsDataAccessInterface;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.Test;
+
+import entity.Attribute;
+import entity.RandomSource;
+import entity.RealFighter;
+import entity.UfcEra;
+import entity.WeightClass;
+import use_case.fighter_creation.FighterDataAccessInterface;
+import use_case.fighter_creation.FighterDetailsDataAccessInterface;
 
 public class SpinFighterInteractorTest {
-
-    /**
-     * Fake fighter data access used to control the available fighter pool.
-     */
-    private static class FakeFighterDataAccess
-            implements FighterDataAccessInterface {
-
-        private final List<RealFighter> fighters;
-
-        FakeFighterDataAccess(List<RealFighter> fighters) {
-            this.fighters = fighters;
-        }
-
-        @Override
-        public List<RealFighter> getFighters() {
-            return fighters;
-        }
-    }
-
-    /**
-     * Fixed random source used to make fighter selection predictable.
-     */
-    private static class FixedRandomSource implements RandomSource {
-
-        @Override
-        public double nextDouble() {
-            return 0.0;
-        }
-
-        @Override
-        public int nextInt(int bound) {
-            return 0;
-        }
-    }
 
     @Test
     public void spinOnlySelectsFighterFromChosenEra() {
@@ -105,8 +71,9 @@ public class SpinFighterInteractorTest {
                 new FixedRandomSource(),
                 fighterDataAccess,
                 detailsDataAccess,
-                outputData -> assertEquals(
-                        detailed, outputData.getFighter()));
+                outputData -> {
+                    assertEquals(detailed, outputData.getFighter());
+                });
 
         interactor.execute(new SpinFighterInputData(UfcEra.ALL_TIME));
     }
@@ -124,5 +91,39 @@ public class SpinFighterInteractorTest {
                 era,
                 "10-0",
                 attributes);
+    }
+
+    /**
+     * Fake fighter data access used to control the available fighter pool.
+     */
+    private static class FakeFighterDataAccess
+            implements FighterDataAccessInterface {
+
+        private final List<RealFighter> fighters;
+
+        FakeFighterDataAccess(List<RealFighter> fighters) {
+            this.fighters = fighters;
+        }
+
+        @Override
+        public List<RealFighter> getFighters() {
+            return fighters;
+        }
+    }
+
+    /**
+     * Fixed random source used to make fighter selection predictable.
+     */
+    private static final class FixedRandomSource implements RandomSource {
+
+        @Override
+        public double nextDouble() {
+            return 0.0;
+        }
+
+        @Override
+        public int nextInt(int bound) {
+            return 0;
+        }
     }
 }
