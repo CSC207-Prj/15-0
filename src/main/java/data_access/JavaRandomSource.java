@@ -1,8 +1,8 @@
 package data_access;
 
-import entity.RandomSource;
-
 import java.util.concurrent.ThreadLocalRandom;
+
+import entity.RandomSource;
 
 /** Production RandomSource implementation backed by Java's ThreadLocalRandom. */
 public final class JavaRandomSource implements RandomSource {

@@ -23,6 +23,16 @@ public final class FighterCreationUseCaseFactory {
     private FighterCreationUseCaseFactory() {
     }
 
+    /**
+     * Creates and wires the Build Custom Fighter use cases.
+     *
+     * @param fighterDataAccess data-access interface used to retrieve fighter data
+     * @param randomSource source of randomness used when spinning and rerolling fighters
+     * @param viewModel view model shared by the fighter creation presenters
+     * @param backAction action performed when the user navigates back
+     * @param continueAction action performed when fighter creation is complete
+     * @return fully configured fighter creation view
+     */
     public static FighterCreationView create(
             FighterDataAccessInterface fighterDataAccess,
             RandomSource randomSource,
@@ -30,10 +40,15 @@ public final class FighterCreationUseCaseFactory {
             Runnable backAction,
             Runnable continueAction) {
 
-        final FighterDetailsDataAccessInterface detailsDataAccess =
-                fighterDataAccess instanceof FighterDetailsDataAccessInterface
-                        ? (FighterDetailsDataAccessInterface) fighterDataAccess
-                        : null;
+        final FighterDetailsDataAccessInterface detailsDataAccess;
+
+        if (fighterDataAccess instanceof FighterDetailsDataAccessInterface) {
+            detailsDataAccess =
+                    (FighterDetailsDataAccessInterface) fighterDataAccess;
+        }
+        else {
+            detailsDataAccess = null;
+        }
 
         final SpinFighterPresenter spinPresenter =
                 new SpinFighterPresenter(viewModel);

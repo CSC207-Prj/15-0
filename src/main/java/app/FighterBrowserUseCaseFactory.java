@@ -13,19 +13,32 @@ import view.FighterBrowserView;
  * Dependency wiring for User Story 6.
  */
 public final class FighterBrowserUseCaseFactory {
+
     private FighterBrowserUseCaseFactory() {
     }
 
+    /**
+     * Creates and wires the Fighter Browser use case.
+     *
+     * @param dataAccess data-access interface used to retrieve fighter data
+     * @param backAction action performed when the user navigates back
+     * @return fully configured fighter browser view
+     */
     public static FighterBrowserView create(
             FighterBrowserDataAccessInterface dataAccess,
             Runnable backAction) {
 
         final FighterBrowserViewModel viewModel =
                 new FighterBrowserViewModel();
+
         final BrowseFightersOutputBoundary presenter =
                 new FighterBrowserPresenter(viewModel);
+
         final BrowseFightersInputBoundary interactor =
-                new BrowseFightersInteractor(dataAccess, presenter);
+                new BrowseFightersInteractor(
+                        dataAccess,
+                        presenter);
+
         final FighterBrowserController controller =
                 new FighterBrowserController(interactor);
 

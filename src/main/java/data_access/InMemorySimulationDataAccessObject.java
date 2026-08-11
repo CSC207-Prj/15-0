@@ -4,7 +4,11 @@ import entity.GameRun;
 import use_case.simulation.SimulationDataAccessInterface;
 
 /**
- * Stores the active game run in memory for the Simulation use case.
+ * Stores the currently active gauntlet run in process memory.
+ *
+ * <p>This outer-layer data-access object implements the use-case-owned
+ * SimulationDataAccessInterface. Replacing it with file or database
+ * storage would not require changes to SimulationInteractor.
  */
 public final class InMemorySimulationDataAccessObject
         implements SimulationDataAccessInterface {
@@ -39,10 +43,10 @@ public final class InMemorySimulationDataAccessObject
     /**
      * Replaces the run currently held in memory.
      *
-     * @param gameRun run to store
+     * @param runToSave run to store
      */
     @Override
-    public void saveGameRun(GameRun gameRun) {
-        this.gameRun = gameRun;
+    public void saveGameRun(GameRun runToSave) {
+        this.gameRun = runToSave;
     }
 }
