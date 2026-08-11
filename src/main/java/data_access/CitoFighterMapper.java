@@ -35,7 +35,8 @@ public final class CitoFighterMapper {
     }
 
     public static RealFighter toFighter(JSONObject source) {
-        return toFighter(source, null, null, null);
+        return toFighter(source, null,
+                null, null);
     }
 
     public static RealFighter toFighter(JSONObject source,
