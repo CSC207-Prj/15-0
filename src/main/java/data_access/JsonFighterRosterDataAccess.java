@@ -28,9 +28,8 @@ import use_case.view_roster.ViewRosterDataAccessInterface;
 /**
  * File-backed implementation of the saved-fighter roster, as described in the
  * blueprint: all fighters live in one local JSON file, which is read once on
- * startup and rewritten after every save or delete. Because each use case
- * only sees its own small interface, this class could be swapped for a real
- * database without touching the use case layer.
+ * startup and rewritten after every save or delete. Each use case accesses
+ * the store through its own small data-access interface.
  */
 public class JsonFighterRosterDataAccess
         implements SaveFighterDataAccessInterface, ViewRosterDataAccessInterface,

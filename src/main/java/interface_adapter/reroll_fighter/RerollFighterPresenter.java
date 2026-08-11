@@ -23,7 +23,6 @@ public class RerollFighterPresenter implements RerollFighterOutputBoundary {
     public void prepareSuccessView(RerollFighterOutputData outputData) {
         final RealFighter fighter = outputData.getFighter();
         viewModel.setCurrentFighter(fighter);
-        viewModel.setCurrentFighter(fighter);
         final Map<String, Integer> stats = new HashMap<>();
 
         for (Map.Entry<Attribute, Double> entry : fighter.getAttributes().entrySet()) {

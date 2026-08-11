@@ -99,15 +99,14 @@ public class ConfirmInteractor implements ConfirmInputBoundary {
     private Random random = new Random();
 
     /**
-     * Existing constructor retained so current US3 unit tests and standalone use
-     * continue to work.
+     * Creates a confirmation interactor without game-run persistence.
      */
     public ConfirmInteractor(ConfirmOutputBoundary outputboundary) {
         this(outputboundary, null);
     }
 
     /**
-     * Integrated constructor used when US3 is connected to US4.
+     * Creates a confirmation interactor that can persist a completed game run.
      */
     public ConfirmInteractor(ConfirmOutputBoundary outputboundary,
                              ConfirmRunDataAccessInterface runDataAccess) {

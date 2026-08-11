@@ -1,6 +1,6 @@
 package entity;
 
-/** Shared abstraction over randomness for later wheels and simulation strategies. */
+/** Provides random values for fighter selection and fight simulation. */
 public interface RandomSource {
     double nextDouble();
 

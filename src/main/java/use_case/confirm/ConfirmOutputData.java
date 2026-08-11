@@ -11,11 +11,12 @@ public class ConfirmOutputData {
 
     public ConfirmOutputData(String fighterName, List<String> attributePoints, String weightClass,  int overall) {
         this.fighterName = fighterName;
-        this.fighterName = fighterName;
         if (attributePoints == null) {
             this.attributePoints = new ArrayList<>();
         }
-        this.attributePoints = new ArrayList<>(attributePoints);
+        else {
+            this.attributePoints = new ArrayList<>(attributePoints);
+        }
         this.weightClass = weightClass;
         this.overall = overall;
     }
@@ -33,4 +34,3 @@ public class ConfirmOutputData {
     }
 
 }
-

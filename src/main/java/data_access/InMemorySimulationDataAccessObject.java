@@ -4,10 +4,7 @@ import entity.GameRun;
 import use_case.simulation.SimulationDataAccessInterface;
 
 /**
- * Temporary in-memory DAO for User Story 4.
- *
- * Later integration can replace this with the team's shared session DAO
- * without changing SimulationInteractor.
+ * Stores the active game run in memory for the Simulation use case.
  */
 public final class InMemorySimulationDataAccessObject
         implements SimulationDataAccessInterface {

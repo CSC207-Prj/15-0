@@ -12,7 +12,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 
-/** Home/rules screen. Buttons perform navigation only in Stage 2. */
+/** Home and rules screen with navigation to the application's main features. */
 public final class WelcomeView extends JPanel {
     public WelcomeView(Runnable newRunAction,
                        Runnable savedFightersAction,
@@ -76,7 +76,7 @@ public final class WelcomeView extends JPanel {
         panel.add(Box.createVerticalStrut(20));
         panel.add(description);
         panel.add(Box.createVerticalStrut(28));
-        panel.add(UfcTheme.body("Stage 2 preview data only — gameplay is connected in later stages."));
+        panel.add(UfcTheme.body("Configure a run, build a fighter, and complete the ranked gauntlet."));
         panel.add(Box.createVerticalGlue());
         return panel;
     }

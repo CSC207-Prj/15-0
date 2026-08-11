@@ -66,7 +66,7 @@ public abstract class Fighter {
         return Collections.unmodifiableMap(attributes);
     }
 
-    /** Raw entity state operation used by later fighter-building and restore workflows. */
+    /** Updates an attribute during fighter building or roster restoration. */
     protected final void setAttribute(Attribute attribute, double value) {
         Objects.requireNonNull(attribute, "attribute");
         if (value < 0.0 || value > 100.0 || Double.isNaN(value)) {

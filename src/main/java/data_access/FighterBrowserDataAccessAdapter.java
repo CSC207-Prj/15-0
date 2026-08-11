@@ -8,9 +8,7 @@ import use_case.fighter_creation.FighterDetailsDataAccessInterface;
 import java.util.List;
 
 /**
- * Reuses the application's current real-fighter catalogue for User Story 6.
- * A Cito-backed implementation can replace this adapter later without
- * changing the browser use case.
+ * Adapts the application's real-fighter catalogue to the Fighter Browser data-access boundary.
  */
 public class FighterBrowserDataAccessAdapter
         implements FighterBrowserDataAccessInterface {
@@ -36,4 +34,3 @@ public class FighterBrowserDataAccessAdapter
         return fighter;
     }
 }
-

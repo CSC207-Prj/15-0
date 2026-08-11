@@ -13,10 +13,7 @@ import view.SimulationView;
 import java.util.Objects;
 
 /**
- * App-layer assembly helper for the User Story 4 dependency graph.
- *
- * The shared AppBuilder can call this method when the team integrates all
- * user stories.
+ * Creates and wires the dependencies for the Simulation use case.
  */
 public final class SimulationUseCaseFactory {
     private SimulationUseCaseFactory() {
