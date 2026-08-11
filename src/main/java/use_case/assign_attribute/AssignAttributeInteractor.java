@@ -28,20 +28,19 @@ public class AssignAttributeInteractor implements AssignAttributeInputBoundary {
 
         if (customFighter.hasAttribute(attribute)) {
             presenter.prepareFailView("That attribute is already assigned.");
+            return;
         }
-        else {
-            final double value = realFighter.getAttribute(attribute);
 
-            customFighter.assignAttribute(attribute, value);
+        final double value = realFighter.getAttribute(attribute);
 
-            final AssignAttributeOutputData outputData =
-                    new AssignAttributeOutputData(attribute, value, realFighter.getName());
+        customFighter.assignAttribute(attribute, value);
 
-            presenter.prepareSuccessView(outputData);
+        final AssignAttributeOutputData outputData = new AssignAttributeOutputData(attribute, value, realFighter.getName());
 
-            if (!customFighter.hasAllAttributes()) {
-                spinFighterInteractor.execute(new SpinFighterInputData(inputData.getEra()));
-            }
+        presenter.prepareSuccessView(outputData);
+
+        if (!customFighter.hasAllAttributes()) {
+            spinFighterInteractor.execute(new SpinFighterInputData(inputData.getEra()));
         }
     }
 }

@@ -15,10 +15,8 @@ public class AssignAttributeInputData {
     private final Attribute attribute;
     private final UfcEra era;
 
-    public AssignAttributeInputData(CustomFighter customFighter,
-                                    RealFighter realFighter,
-                                    Attribute attribute,
-                                    UfcEra era) {
+
+    public AssignAttributeInputData(CustomFighter customFighter, RealFighter realFighter, Attribute attribute, UfcEra era) {
         this.customFighter = customFighter;
         this.realFighter = realFighter;
         this.attribute = attribute;

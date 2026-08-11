@@ -2,12 +2,12 @@ package app;
 
 import entity.RandomSource;
 import interface_adapter.assign_attribute.AssignAttributeController;
-import interface_adapter.assign_attribute.AssignAttributePresenter;
+import interface_adapter.fighter_creation.AssignAttributePresenter;
 import interface_adapter.fighter_creation.FighterCreationViewModel;
+import interface_adapter.fighter_creation.RerollFighterController;
+import interface_adapter.fighter_creation.RerollFighterPresenter;
 import interface_adapter.fighter_creation.SpinFighterController;
 import interface_adapter.fighter_creation.SpinFighterPresenter;
-import interface_adapter.reroll_fighter.RerollFighterController;
-import interface_adapter.reroll_fighter.RerollFighterPresenter;
 import use_case.assign_attribute.AssignAttributeInteractor;
 import use_case.fighter_creation.FighterDataAccessInterface;
 import use_case.fighter_creation.FighterDetailsDataAccessInterface;
@@ -24,7 +24,6 @@ public final class FighterCreationUseCaseFactory {
     }
 
     /**
-<<<<<<< Updated upstream
      * Creates and wires the Build Custom Fighter use cases.
      *
      * @param fighterDataAccess data-access interface used to retrieve fighter data
@@ -33,16 +32,6 @@ public final class FighterCreationUseCaseFactory {
      * @param backAction action performed when the user navigates back
      * @param continueAction action performed when fighter creation is complete
      * @return fully configured fighter creation view
-=======
-     * Creates the fighter-creation view and wires its three use cases.
-     *
-     * @param fighterDataAccess fighter catalogue access
-     * @param randomSource source used to choose fighters
-     * @param viewModel state observed by the view
-     * @param backAction action for returning to settings
-     * @param continueAction action for continuing after fighter creation
-     * @return the fully configured fighter-creation view
->>>>>>> Stashed changes
      */
     public static FighterCreationView create(
             FighterDataAccessInterface fighterDataAccess,
@@ -52,15 +41,10 @@ public final class FighterCreationUseCaseFactory {
             Runnable continueAction) {
 
         final FighterDetailsDataAccessInterface detailsDataAccess;
-<<<<<<< Updated upstream
 
         if (fighterDataAccess instanceof FighterDetailsDataAccessInterface) {
             detailsDataAccess =
                     (FighterDetailsDataAccessInterface) fighterDataAccess;
-=======
-        if (fighterDataAccess instanceof FighterDetailsDataAccessInterface) {
-            detailsDataAccess = (FighterDetailsDataAccessInterface) fighterDataAccess;
->>>>>>> Stashed changes
         }
         else {
             detailsDataAccess = null;

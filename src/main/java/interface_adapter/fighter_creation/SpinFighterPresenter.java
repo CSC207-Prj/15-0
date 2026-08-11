@@ -1,21 +1,17 @@
 package interface_adapter.fighter_creation;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import entity.Attribute;
 import entity.RealFighter;
 import use_case.spin_fighter.SpinFighterOutputBoundary;
 import use_case.spin_fighter.SpinFighterOutputData;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Presenter for the Spin Fighter use case.
  */
 public class SpinFighterPresenter implements SpinFighterOutputBoundary {
-
-    private static final int BULLET_CODE_POINT = 0x2022;
-    private static final String DETAILS_SEPARATOR =
-            " " + Character.toString(BULLET_CODE_POINT) + " ";
 
     private final FighterCreationViewModel viewModel;
 
@@ -33,7 +29,7 @@ public class SpinFighterPresenter implements SpinFighterOutputBoundary {
         }
 
         final String details = fighter.getProfessionalRecord()
-                + DETAILS_SEPARATOR + fighter.getWeightClass().getDisplayName();
+                + " • " + fighter.getWeightClass().getDisplayName();
 
         viewModel.setCurrentFighter(fighter);
         viewModel.setRolledFighter(fighter.getName(), details, stats);

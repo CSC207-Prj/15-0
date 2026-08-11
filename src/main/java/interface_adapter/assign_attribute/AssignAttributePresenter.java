@@ -1,6 +1,5 @@
-package interface_adapter.assign_attribute;
+package interface_adapter.fighter_creation;
 
-import interface_adapter.fighter_creation.FighterCreationViewModel;
 import use_case.assign_attribute.AssignAttributeOutputBoundary;
 import use_case.assign_attribute.AssignAttributeOutputData;
 

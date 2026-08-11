@@ -17,3 +17,5 @@ public class SpinFighterOutputData {
         return fighter;
     }
 }
+
+

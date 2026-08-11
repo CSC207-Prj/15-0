@@ -1,7 +1,14 @@
 package view;
 
+import entity.Attribute;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -10,39 +17,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-
-import entity.Attribute;
 import interface_adapter.assign_attribute.AssignAttributeController;
 import interface_adapter.fighter_creation.FighterCreationViewModel;
+import interface_adapter.fighter_creation.RerollFighterController;
 import interface_adapter.fighter_creation.SpinFighterController;
-import interface_adapter.reroll_fighter.RerollFighterController;
 
 /** View for building a custom fighter. */
 public final class FighterCreationView extends JPanel implements PropertyChangeListener {
-
-    private static final int HEADER_VERTICAL_INSET = 20;
-    private static final int PAGE_HORIZONTAL_INSET = 30;
-    private static final int CONTENT_VERTICAL_INSET = 24;
-    private static final int BUILD_ROW_MAX_HEIGHT = 68;
-    private static final int BUILD_ROW_VERTICAL_INSET = 10;
-    private static final int BUILD_ROW_HORIZONTAL_INSET = 8;
-    private static final int FIGHTER_NAME_FONT_SIZE = 34;
-    private static final int STAT_ROW_VERTICAL_INSET = 8;
-    private static final int STAT_LABEL_WIDTH = 150;
-    private static final int STAT_LABEL_HEIGHT = 24;
-    private static final int EM_DASH_CODE_POINT = 0x2014;
-    private static final String EM_DASH = Character.toString(EM_DASH_CODE_POINT);
 
     private JLabel rerollsLabel;
     private JButton spinButton;
@@ -57,8 +44,10 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
     private final FighterCreationViewModel viewModel;
     private final Map<Attribute, JLabel> assignedLabels = new HashMap<>();
     private final Map<Attribute, JProgressBar> statBars = new HashMap<>();
-    private final Map<Attribute, JLabel> statLabels = new HashMap<>();
-    private JLabel attributesLabel;
+    private final Map<Attribute, JLabel> statLabels = new HashMap<>();private JLabel attributesLabel;
+
+
+
 
     public FighterCreationView(SpinFighterController spinFighterController,
                                RerollFighterController rerollFighterController,
@@ -76,8 +65,26 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
         setLayout(new BorderLayout());
         setBackground(UfcTheme.BACKGROUND);
 
-        add(createHeaderPanel(), BorderLayout.NORTH);
-        add(createContentPanel(), BorderLayout.CENTER);
+        final JPanel header = UfcTheme.panel(new BorderLayout());
+        header.setBackground(UfcTheme.HEADER);
+        header.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+        header.add(UfcTheme.title("BUILD YOUR FIGHTER"), BorderLayout.WEST);
+
+        final JPanel progressPanel = UfcTheme.panel(null);
+        progressPanel.setLayout(new BoxLayout(progressPanel, BoxLayout.Y_AXIS));
+        attributesLabel = UfcTheme.body("Attributes: 0 / 6");
+        rerollsLabel = UfcTheme.body("Rerolls: 0");
+        progressPanel.add(attributesLabel);
+        progressPanel.add(rerollsLabel);
+        header.add(progressPanel, BorderLayout.EAST);
+        add(header, BorderLayout.NORTH);
+
+        final JPanel content = UfcTheme.panel(new GridLayout(1, 2, 20, 0));
+        content.setBackground(UfcTheme.BACKGROUND);
+        content.setBorder(BorderFactory.createEmptyBorder(24, 30, 24, 30));
+        content.add(createBuildPanel());
+        content.add(createDraftPanel());
+        add(content, BorderLayout.CENTER);
 
         final JPanel actions = UfcTheme.panel(new FlowLayout(FlowLayout.CENTER, 14, 16));
         actions.setBackground(UfcTheme.HEADER);
@@ -142,39 +149,6 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
         updateView();
     }
 
-    private JPanel createHeaderPanel() {
-        final JPanel header = UfcTheme.panel(new BorderLayout());
-        header.setBackground(UfcTheme.HEADER);
-        header.setBorder(BorderFactory.createEmptyBorder(
-                HEADER_VERTICAL_INSET,
-                PAGE_HORIZONTAL_INSET,
-                HEADER_VERTICAL_INSET,
-                PAGE_HORIZONTAL_INSET));
-        header.add(UfcTheme.title("BUILD YOUR FIGHTER"), BorderLayout.WEST);
-
-        final JPanel progressPanel = UfcTheme.panel(null);
-        progressPanel.setLayout(new BoxLayout(progressPanel, BoxLayout.Y_AXIS));
-        attributesLabel = UfcTheme.body("Attributes: 0 / 6");
-        rerollsLabel = UfcTheme.body("Rerolls: 0");
-        progressPanel.add(attributesLabel);
-        progressPanel.add(rerollsLabel);
-        header.add(progressPanel, BorderLayout.EAST);
-        return header;
-    }
-
-    private JPanel createContentPanel() {
-        final JPanel content = UfcTheme.panel(new GridLayout(1, 2, 20, 0));
-        content.setBackground(UfcTheme.BACKGROUND);
-        content.setBorder(BorderFactory.createEmptyBorder(
-                CONTENT_VERTICAL_INSET,
-                PAGE_HORIZONTAL_INSET,
-                CONTENT_VERTICAL_INSET,
-                PAGE_HORIZONTAL_INSET));
-        content.add(createBuildPanel());
-        content.add(createDraftPanel());
-        return content;
-    }
-
     private JPanel createBuildPanel() {
         final JPanel panel = UfcTheme.panel(new BorderLayout());
         panel.setBorder(UfcTheme.cardBorder());
@@ -183,22 +157,20 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
         final JPanel rows = UfcTheme.panel(null);
         rows.setLayout(new BoxLayout(rows, BoxLayout.Y_AXIS));
 
+
+
         for (Attribute attribute : Attribute.values()) {
             final JPanel row = UfcTheme.panel(new BorderLayout(12, 0));
-            row.setMaximumSize(new Dimension(Integer.MAX_VALUE, BUILD_ROW_MAX_HEIGHT));
+            row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 68));
             row.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createMatteBorder(0, 0, 1, 0, UfcTheme.BORDER),
-                    BorderFactory.createEmptyBorder(
-                            BUILD_ROW_VERTICAL_INSET,
-                            BUILD_ROW_HORIZONTAL_INSET,
-                            BUILD_ROW_VERTICAL_INSET,
-                            BUILD_ROW_HORIZONTAL_INSET)));
+                    BorderFactory.createEmptyBorder(10, 8, 10, 8)));
 
             final JLabel name = UfcTheme.body(attribute.getDisplayName());
             name.setFont(UfcTheme.BODY_BOLD);
             name.setForeground(UfcTheme.TEXT);
 
-            final JLabel value = UfcTheme.body("--   " + EM_DASH);
+            final JLabel value = UfcTheme.body("--   —");
             assignedLabels.put(attribute, value);
 
             row.add(name, BorderLayout.WEST);
@@ -220,7 +192,7 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
 
         fighterNameLabel = new JLabel("Spin a fighter");
         fighterNameLabel.setFont(
-                new Font(Font.SANS_SERIF, Font.BOLD, FIGHTER_NAME_FONT_SIZE)
+                new Font(Font.SANS_SERIF, Font.BOLD, 34)
         );
         fighterNameLabel.setForeground(UfcTheme.TEXT);
 
@@ -235,13 +207,13 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
         final JPanel stats = UfcTheme.panel(null);
         stats.setLayout(new BoxLayout(stats, BoxLayout.Y_AXIS));
 
+
         for (final Attribute attribute : Attribute.values()) {
             final JPanel row = UfcTheme.panel(new BorderLayout(10, 0));
-            row.setBorder(BorderFactory.createEmptyBorder(
-                    STAT_ROW_VERTICAL_INSET, 0, STAT_ROW_VERTICAL_INSET, 0));
+            row.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
 
             final JLabel label = UfcTheme.body(attribute.getDisplayName());
-            label.setPreferredSize(new Dimension(STAT_LABEL_WIDTH, STAT_LABEL_HEIGHT));
+            label.setPreferredSize(new Dimension(150, 24));
 
             final JProgressBar bar = UfcTheme.statBar(0);
             final JLabel value = UfcTheme.body("--");
@@ -253,8 +225,7 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
                 @Override
                 public void mouseClicked(MouseEvent event) {
                     if (selectedRow != null) {
-                        selectedRow.setBorder(BorderFactory.createEmptyBorder(
-                                STAT_ROW_VERTICAL_INSET, 0, STAT_ROW_VERTICAL_INSET, 0));
+                        selectedRow.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
                     }
 
                     selectedAttribute = attribute;
@@ -319,20 +290,13 @@ public final class FighterCreationView extends JPanel implements PropertyChangeL
 
             if (assignedValue == null) {
                 assignedLabels.get(attribute)
-                        .setText("--   " + EM_DASH);
+                        .setText("--   —");
             }
             else {
-                final String sourceLabel;
-                if (source == null) {
-                    sourceLabel = EM_DASH;
-                }
-                else {
-                    sourceLabel = source;
-                }
                 assignedLabels.get(attribute).setText(
                         assignedValue
                                 + "   "
-                                + sourceLabel
+                                + (source == null ? "—" : source)
                 );
             }
         }

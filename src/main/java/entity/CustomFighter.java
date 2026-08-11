@@ -23,12 +23,6 @@ public final class CustomFighter extends Fighter {
         super(name, weightClass, record, attributes);
     }
 
-    /**
-     * Assigns one drafted value to the corresponding fighter attribute.
-     *
-     * @param attribute attribute being filled
-     * @param value value copied from the rolled fighter
-     */
     public void assignAttribute(Attribute attribute, double value) {
         setAttribute(attribute, value);
     }

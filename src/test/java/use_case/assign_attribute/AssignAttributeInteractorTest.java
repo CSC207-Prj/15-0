@@ -1,24 +1,36 @@
 package use_case.assign_attribute;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.jupiter.api.Test;
-
 import entity.Attribute;
 import entity.CustomFighter;
 import entity.RealFighter;
 import entity.UfcEra;
 import entity.WeightClass;
+import org.junit.jupiter.api.Test;
 import use_case.spin_fighter.SpinFighterInputBoundary;
 import use_case.spin_fighter.SpinFighterInputData;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 public class AssignAttributeInteractorTest {
+
+    private static class FakeSpinFighterInteractor
+            implements SpinFighterInputBoundary {
+
+        private boolean executed;
+        private UfcEra era;
+
+        @Override
+        public void execute(SpinFighterInputData inputData) {
+            executed = true;
+            era = inputData.getEra();
+        }
+    }
 
     @Test
     public void assignsAttributeAndSpinsNextFighter() {
@@ -207,18 +219,5 @@ public class AssignAttributeInteractorTest {
                 UfcEra.MODERN,
                 "10-0",
                 stats);
-    }
-
-    private static final class FakeSpinFighterInteractor
-            implements SpinFighterInputBoundary {
-
-        private boolean executed;
-        private UfcEra era;
-
-        @Override
-        public void execute(SpinFighterInputData inputData) {
-            executed = true;
-            era = inputData.getEra();
-        }
     }
 }
