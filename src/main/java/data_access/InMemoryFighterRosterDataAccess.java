@@ -14,8 +14,7 @@ import use_case.save_fighter.SaveFighterDataAccessInterface;
 import use_case.view_roster.ViewRosterDataAccessInterface;
 
 /**
- * In-memory implementation of the saved-fighter roster. Useful while wiring
- * screens together and for demos; nothing survives a restart.
+ * Stores saved fighters in memory for the lifetime of the application process.
  */
 public class InMemoryFighterRosterDataAccess
         implements SaveFighterDataAccessInterface, ViewRosterDataAccessInterface,

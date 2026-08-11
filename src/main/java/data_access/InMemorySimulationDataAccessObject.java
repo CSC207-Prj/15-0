@@ -4,11 +4,7 @@ import entity.GameRun;
 import use_case.simulation.SimulationDataAccessInterface;
 
 /**
- * Stores the currently active gauntlet run in process memory.
- *
- * This outer-layer data-access object implements the use-case-owned
- * SimulationDataAccessInterface. Replacing it with file or database
- * storage would not require changes to SimulationInteractor.
+ * Stores the active game run in memory for the Simulation use case.
  */
 public final class InMemorySimulationDataAccessObject
         implements SimulationDataAccessInterface {

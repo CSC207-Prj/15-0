@@ -12,7 +12,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 
-/** Home/rules screen. Buttons perform navigation*/
+/** Home and rules screen with navigation to the application's main features. */
 public final class WelcomeView extends JPanel {
     public WelcomeView(Runnable newRunAction,
                        Runnable savedFightersAction,
@@ -78,7 +78,7 @@ public final class WelcomeView extends JPanel {
         panel.add(Box.createVerticalStrut(20));
         panel.add(description);
         panel.add(Box.createVerticalStrut(28));
-        panel.add(UfcTheme.body("Build your fighter. Take on the Top 15. Go 15-0."));
+        panel.add(UfcTheme.body("Configure a run, build a fighter, and complete the ranked gauntlet."));
         panel.add(Box.createVerticalGlue());
         return panel;
     }

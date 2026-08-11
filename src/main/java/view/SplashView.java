@@ -10,7 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
 
-/** Opening splash screen.*/
+/** Opening splash screen for the application. */
 public final class SplashView extends JPanel {
     public SplashView(Runnable continueAction) {
         setLayout(new BorderLayout());

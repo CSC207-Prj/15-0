@@ -13,11 +13,7 @@ import use_case.simulation.SimulationInteractor;
 import view.SimulationView;
 
 /**
- * Assembles the complete User Story 4 dependency graph in the outer app layer.
- *
- * The factory creates the presenter, weighted fight strategy, interactor, and
- * controller, then injects their dependencies. Keeping this wiring outside the
- * use case stops the business logic/ entities from constructing concrete outer-layer objects.
+ * Creates and wires the dependencies for the Simulation use case.
  */
 public final class SimulationUseCaseFactory {
     private SimulationUseCaseFactory() {

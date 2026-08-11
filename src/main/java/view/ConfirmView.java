@@ -22,9 +22,7 @@ import interface_adapter.confirm_fighter.ConfirmController;
 import interface_adapter.confirm_fighter.ConfirmState;
 import interface_adapter.confirm_fighter.ConfirmViewModel;
 
-/**
- * Displays the fighter naming, weight-class spin, and rating controls.
- */
+/** View for naming, reviewing, and confirming a completed fighter build. */
 public final class ConfirmView extends JPanel implements PropertyChangeListener {
     private final ConfirmController confirmController;
     private final ConfirmViewModel confirmViewModel;
@@ -149,7 +147,7 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
         final JLabel wheelTitle = UfcTheme.centeredLabel(
                 "WEIGHT-CLASS WHEEL", UfcTheme.SECTION, UfcTheme.TEXT);
         final JLabel wheelHelp = UfcTheme.centeredLabel(
-                "One spin will lock the division in a later stage.",
+                "One spin locks the fighter's division.",
                 UfcTheme.BODY, UfcTheme.MUTED);
         // division and overall are fields so propertyChange can update them.
         panel.add(Box.createVerticalGlue());

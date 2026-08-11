@@ -12,10 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Temporary ranked data used until the Cito API implementation is connected.
- *
- * This class is in the outer data-access layer so the Simulation use case does
- * not depend on placeholder data.
+ * Creates deterministic ranked divisions when live Cito rankings are unavailable.
  */
 public final class DemoRankingsFactory {
     private DemoRankingsFactory() {

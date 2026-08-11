@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * In-memory fighter data access used for development and testing.
+ * Provides the bundled fighter catalogue used when live fighter data is unavailable.
  */
 public class InMemoryFighterDataAccessObject
         implements FighterDataAccessInterface {

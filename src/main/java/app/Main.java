@@ -196,7 +196,7 @@ public final class Main {
     }
 
     /**
-     * Transfers the completed US2 draft into the existing US3 view model.
+     * Transfers the completed fighter draft into the confirmation view model.
      */
     private static void loadConfirmDraft(CustomFighter customFighter,
                                          ConfirmViewModel confirmViewModel) {
