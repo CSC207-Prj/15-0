@@ -15,10 +15,10 @@ public class ExhibitionController {
 
     /**
      * Runs a one-off exhibition match between two saved fighters.
-     * @param fighterAName the first fighter's name
-     * @param fighterBName the second fighter's name
+     * @param firstFighterName the first fighter's name
+     * @param secondFighterName the second fighter's name
      */
-    public void execute(String fighterAName, String fighterBName) {
-        interactor.execute(new ExhibitionInputData(fighterAName, fighterBName));
+    public void execute(String firstFighterName, String secondFighterName) {
+        interactor.execute(new ExhibitionInputData(firstFighterName, secondFighterName));
     }
 }

@@ -26,10 +26,18 @@ public class SavedFightersViewModel extends ViewModel {
         super(VIEW_NAME);
     }
 
+    /**
+     * Returns the current state of the Saved Fighters screen.
+     * @return the current state
+     */
     public SavedFightersState getState() {
         return state;
     }
 
+    /**
+     * Replaces the state; a null state resets the screen to a fresh state.
+     * @param state the new state, or null to reset
+     */
     public void setState(SavedFightersState state) {
         if (state == null) {
             this.state = new SavedFightersState();
