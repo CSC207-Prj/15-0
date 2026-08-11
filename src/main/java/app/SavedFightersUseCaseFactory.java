@@ -34,6 +34,23 @@ public final class SavedFightersUseCaseFactory {
     private SavedFightersUseCaseFactory() {
     }
 
+    /**
+     * Assembles the Saved Fighters screen: interactors, presenters, and
+     * controllers for all five roster operations, wired to one view.
+     * @param viewRosterDataAccess port for listing saved fighters
+     * @param deleteFighterDataAccess port for deleting saved fighters
+     * @param loadFighterDataAccess port for loading one saved fighter
+     * @param exhibitionDataAccess port for exhibition lookups
+     * @param randomSource randomness for the exhibition simulator
+     * @param saveFighterController shared save controller, also used by the
+     *        rename-and-retry flow
+     * @param viewModel the screen's shared view model
+     * @param backHomeAction navigation back to the welcome screen
+     * @return the fully wired Saved Fighters view
+     */
+    // Known Checkstyle finding (ParameterNumber 8 > 7): the eight parameters
+    // are deliberate — the four data-access ports stay separately typed so
+    // each use case keeps its own segregated interface.
     public static SavedFightersView create(
             ViewRosterDataAccessInterface viewRosterDataAccess,
             DeleteFighterDataAccessInterface deleteFighterDataAccess,

@@ -1,0 +1,7 @@
+We used generative AI, in part, to understand certain clean architecture and design models. It taught us the basics. As a group, we were unclear on API integration even after LAB 4, so we used AI to help smooth over any confusion.
+
+Mahin Mia
+John Shi
+Chetanya Moudgil
+Hongli Tao
+Mohit Bendale

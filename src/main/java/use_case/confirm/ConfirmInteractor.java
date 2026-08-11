@@ -1,16 +1,19 @@
 package use_case.confirm;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 import entity.CustomFighter;
 import entity.Division;
 import entity.GameRun;
 import entity.GameSettings;
 import entity.WeightClass;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
+/**
+ * Handles fighter confirmation and creates the corresponding gauntlet run.
+ */
 public class ConfirmInteractor implements ConfirmInputBoundary {
     private static final int ATTRIBUTE_COUNT = 6;
     private static final int ATTRIBUTE_MIN = 0;
@@ -47,51 +50,18 @@ public class ConfirmInteractor implements ConfirmInputBoundary {
     private static final List<Double> HEAVY_WEIGHTS = new ArrayList<>();
 
     static {
+        Collections.addAll(FAST_WEIGHTS, TWENTY_PERCENT, TWENTY_PERCENT,
+                FIFTEEN_PERCENT, TEN_PERCENT, TEN_PERCENT, TWENTY_FIVE_PERCENT);
+        Collections.addAll(BALANCED_WEIGHTS, TWENTY_PERCENT, TWENTY_PERCENT,
+                TWENTY_PERCENT, TEN_PERCENT, TEN_PERCENT, TWENTY_PERCENT);
         Collections.addAll(
-                FAST_WEIGHTS,
-                TWENTY_PERCENT,
-                TWENTY_PERCENT,
-                FIFTEEN_PERCENT,
-                TEN_PERCENT,
-                TEN_PERCENT,
-                TWENTY_FIVE_PERCENT
-        );
+                WELTERWEIGHT_WEIGHTS, TWENTY_FIVE_PERCENT, TWENTY_PERCENT,
+                TWENTY_PERCENT, TEN_PERCENT, TEN_PERCENT, FIFTEEN_PERCENT);
         Collections.addAll(
-                BALANCED_WEIGHTS,
-                TWENTY_PERCENT,
-                TWENTY_PERCENT,
-                TWENTY_PERCENT,
-                TEN_PERCENT,
-                TEN_PERCENT,
-                TWENTY_PERCENT
-        );
-        Collections.addAll(
-                WELTERWEIGHT_WEIGHTS,
-                TWENTY_FIVE_PERCENT,
-                TWENTY_PERCENT,
-                TWENTY_PERCENT,
-                TEN_PERCENT,
-                TEN_PERCENT,
-                FIFTEEN_PERCENT
-        );
-        Collections.addAll(
-                MIDDLEWEIGHT_WEIGHTS,
-                TWENTY_FIVE_PERCENT,
-                TWENTY_PERCENT,
-                FIFTEEN_PERCENT,
-                FIFTEEN_PERCENT,
-                FIFTEEN_PERCENT,
-                TEN_PERCENT
-        );
-        Collections.addAll(
-                HEAVY_WEIGHTS,
-                THIRTY_PERCENT,
-                TWENTY_PERCENT,
-                TEN_PERCENT,
-                FIFTEEN_PERCENT,
-                FIFTEEN_PERCENT,
-                TEN_PERCENT
-        );
+                MIDDLEWEIGHT_WEIGHTS, TWENTY_FIVE_PERCENT, TWENTY_PERCENT,
+                FIFTEEN_PERCENT, FIFTEEN_PERCENT, FIFTEEN_PERCENT, TEN_PERCENT);
+        Collections.addAll(HEAVY_WEIGHTS, THIRTY_PERCENT, TWENTY_PERCENT,
+                TEN_PERCENT, FIFTEEN_PERCENT, FIFTEEN_PERCENT, TEN_PERCENT);
     }
 
     private final ConfirmOutputBoundary outputboundary;
@@ -99,14 +69,19 @@ public class ConfirmInteractor implements ConfirmInputBoundary {
     private Random random = new Random();
 
     /**
-     * Creates a confirmation interactor without game-run persistence.
+     * Creates an interactor that confirms fighters without starting a gauntlet run.
+     *
+     * @param outputboundary the presenter that receives confirmation results
      */
     public ConfirmInteractor(ConfirmOutputBoundary outputboundary) {
         this(outputboundary, null);
     }
 
     /**
-     * Creates a confirmation interactor that can persist a completed game run.
+     * Creates an interactor that confirms fighters and starts gauntlet runs.
+     *
+     * @param outputboundary the presenter that receives confirmation results
+     * @param runDataAccess access to the data required to create a gauntlet run
      */
     public ConfirmInteractor(ConfirmOutputBoundary outputboundary,
                              ConfirmRunDataAccessInterface runDataAccess) {
@@ -115,6 +90,12 @@ public class ConfirmInteractor implements ConfirmInputBoundary {
         this.random = new Random();
     }
 
+    /**
+     * Checks that all six fighter attributes contain values in the valid range.
+     *
+     * @param inputData the fighter data to validate
+     * @return true when every attribute is valid; otherwise, false
+     */
     private boolean validAttributes(ConfirmInputData inputData) {
         if (inputData == null
                 || inputData.getAttributePoints() == null
@@ -151,6 +132,13 @@ public class ConfirmInteractor implements ConfirmInputBoundary {
         return true;
     }
 
+    /**
+     * Calculates a fighter's overall rating using its weight-class weights.
+     *
+     * @param attributePoints the fighter's six attribute values
+     * @param weightClass the fighter's weight class
+     * @return the rounded weighted overall rating
+     */
     private int calculateOverall(List<String> attributePoints,
                                  String weightClass) {
         final List<Double> weights = getWeights(weightClass);
@@ -165,6 +153,13 @@ public class ConfirmInteractor implements ConfirmInputBoundary {
         return (int) Math.round(totalWeight);
     }
 
+    /**
+     * Gets the attribute weights for a weight class.
+     *
+     * @param weightClass the display name of the weight class
+     * @return the attribute weights for the weight class
+     * @throws IllegalArgumentException when the weight class is not supported
+     */
     private List<Double> getWeights(String weightClass) {
         switch (weightClass) {
             case "Flyweight":
@@ -185,6 +180,11 @@ public class ConfirmInteractor implements ConfirmInputBoundary {
         }
     }
 
+    /**
+     * Randomly assigns a weight class and calculates the fighter's overall rating.
+     *
+     * @param inputData the fighter data to use for the spin
+     */
     @Override
     public void spin(ConfirmInputData inputData) {
         if (!validAttributes(inputData)) {
@@ -206,6 +206,11 @@ public class ConfirmInteractor implements ConfirmInputBoundary {
         outputboundary.prepareSpinSuccessView(outputData);
     }
 
+    /**
+     * Confirms valid fighter data and starts a gauntlet run when configured.
+     *
+     * @param inputData the fighter data to confirm
+     */
     @Override
     public void confirm(ConfirmInputData inputData) {
         if (inputData == null
@@ -247,6 +252,12 @@ public class ConfirmInteractor implements ConfirmInputBoundary {
         outputboundary.prepareConfirmSuccessView(outputData);
     }
 
+    /**
+     * Creates and saves a gauntlet run from the confirmed fighter data.
+     *
+     * @param inputData the confirmed fighter data
+     * @throws IllegalStateException when the fighter or game settings are missing
+     */
     private void createGauntletRun(ConfirmInputData inputData) {
         final CustomFighter fighter = runDataAccess.getCustomFighter();
         final GameSettings settings = runDataAccess.getGameSettings();
@@ -277,6 +288,13 @@ public class ConfirmInteractor implements ConfirmInputBoundary {
         runDataAccess.saveGameRun(gameRun);
     }
 
+    /**
+     * Converts a weight-class display name to its domain value.
+     *
+     * @param displayName the weight-class display name
+     * @return the matching weight-class value
+     * @throws IllegalArgumentException when the display name is not supported
+     */
     private WeightClass toWeightClass(String displayName) {
         for (WeightClass weightClass : WeightClass.values()) {
             if (weightClass.getDisplayName().equals(displayName)) {

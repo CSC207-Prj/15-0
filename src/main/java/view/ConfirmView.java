@@ -1,9 +1,5 @@
 package view;
 
-import interface_adapter.confirm_fighter.ConfirmController;
-import interface_adapter.confirm_fighter.ConfirmState;
-import interface_adapter.confirm_fighter.ConfirmViewModel;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -13,7 +9,18 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import interface_adapter.confirm_fighter.ConfirmController;
+import interface_adapter.confirm_fighter.ConfirmState;
+import interface_adapter.confirm_fighter.ConfirmViewModel;
 
 /** View for naming, reviewing, and confirming a completed fighter build. */
 public final class ConfirmView extends JPanel implements PropertyChangeListener {
@@ -25,11 +32,21 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
     private final JTextField name = UfcTheme.textField(24);
     private final JButton spin = UfcTheme.primaryButton("Spin Weight Class");
     private final JButton confirm = UfcTheme.primaryButton("Confirm Fighter");
-    private final JLabel division = UfcTheme.centeredLabel("TBD", new Font(Font.SANS_SERIF, Font.BOLD, 30), UfcTheme.TEXT);
-    private final JLabel overall = UfcTheme.centeredLabel("--", new Font(Font.SANS_SERIF, Font.BOLD, 58), UfcTheme.ACCENT);
+    private final JLabel division = UfcTheme.centeredLabel("TBD", new Font(Font.SANS_SERIF,
+            Font.BOLD, 30), UfcTheme.TEXT);
+    private final JLabel overall = UfcTheme.centeredLabel("--", new Font(Font.SANS_SERIF,
+            Font.BOLD, 58), UfcTheme.ACCENT);
 
-
-    public ConfirmView(ConfirmController confirmController, ConfirmViewModel confirmViewModel,Runnable backAction, Runnable continueAction) {
+    /**
+     * Creates the confirm-fighter screen.
+     *
+     * @param confirmController the controller for confirm-screen actions
+     * @param confirmViewModel the view model that supplies screen state
+     * @param backAction the action to run when the user goes back
+     * @param continueAction the action to run after confirmation
+     */
+    public ConfirmView(ConfirmController confirmController, ConfirmViewModel confirmViewModel, Runnable backAction,
+                       Runnable continueAction) {
         this.confirmController = confirmController;
         this.confirmViewModel = confirmViewModel;
         this.continueAction = continueAction;
@@ -53,11 +70,10 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
         content.add(createDivisionPanel());
         add(content, BorderLayout.CENTER);
 
-        final JPanel actions = UfcTheme.panel( new FlowLayout(FlowLayout.CENTER, 18, 16));
+        final JPanel actions = UfcTheme.panel(new FlowLayout(FlowLayout.CENTER, 18, 16));
         actions.setBackground(UfcTheme.HEADER);
 
         final JButton back = UfcTheme.secondaryButton("Back to Draft");
-
 
         back.addActionListener(event -> backAction.run());
         spin.addActionListener(event -> {
@@ -76,6 +92,11 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
         updateView(confirmViewModel.getState());
     }
 
+    /**
+     * Creates the panel that displays the fighter's name and attributes.
+     *
+     * @return the configured fighter panel
+     */
     private JPanel createFighterPanel() {
         final JPanel panel = UfcTheme.panel(new BorderLayout());
         panel.setBorder(UfcTheme.cardBorder());
@@ -97,7 +118,8 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
         for (int index = 0; index < ATTRIBUTE_NAMES.length; index++) {
             final JPanel row = UfcTheme.panel(new BorderLayout(12, 0));
             row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 62));
-            row.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, UfcTheme.BORDER), BorderFactory.createEmptyBorder(10, 8, 10, 8)));
+            row.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1,
+                    0, UfcTheme.BORDER), BorderFactory.createEmptyBorder(10, 8, 10, 8)));
             final JLabel label = UfcTheme.body(ATTRIBUTE_NAMES[index]);
             label.setFont(UfcTheme.BODY_BOLD);
             label.setForeground(UfcTheme.TEXT);
@@ -112,6 +134,11 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
         return panel;
     }
 
+    /**
+     * Creates the panel that displays the weight class and overall rating.
+     *
+     * @return the configured division panel
+     */
     private JPanel createDivisionPanel() {
         final JPanel panel = UfcTheme.panel(null);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -136,11 +163,21 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
         return panel;
     }
 
+    /**
+     * Refreshes the screen when the view-model state changes.
+     *
+     * @param evt the property-change event
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         updateView(confirmViewModel.getState());
     }
 
+    /**
+     * Updates the displayed controls from the supplied state.
+     *
+     * @param state the latest confirm-screen state
+     */
     private void updateView(ConfirmState state) {
         final List<String> attributes = state.getAttributePoints();
 
@@ -157,13 +194,15 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
 
         if (state.getWeightClass() == null) {
             division.setText("TBD");
-        } else {
+        }
+        else {
             division.setText(state.getWeightClass());
         }
 
         if (state.getOverall() == null) {
             overall.setText("--");
-        } else {
+        }
+        else {
             overall.setText(state.getOverall());
         }
 
@@ -172,7 +211,8 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
                 && !state.isConfirmed());
 
         if (state.getErrorMessage() != null) {
-            JOptionPane.showMessageDialog(this, state.getErrorMessage(), "Confirm Fighter", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, state.getErrorMessage(), "Confirm Fighter",
+                    JOptionPane.ERROR_MESSAGE);
         }
 
         if (state.isConfirmed()) {

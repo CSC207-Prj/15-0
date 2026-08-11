@@ -39,32 +39,68 @@ public class SavedFightersState {
         return loadedFighterDetails;
     }
 
+    /**
+     * Sets the loaded fighter summary line; null clears it.
+     * @param loadedFighterDetails the summary text, or null
+     */
     public void setLoadedFighterDetails(String loadedFighterDetails) {
-        this.loadedFighterDetails = loadedFighterDetails == null ? "" : loadedFighterDetails;
+        if (loadedFighterDetails == null) {
+            this.loadedFighterDetails = "";
+        }
+        else {
+            this.loadedFighterDetails = loadedFighterDetails;
+        }
     }
 
     public String getExhibitionResult() {
         return exhibitionResult;
     }
 
+    /**
+     * Sets the latest exhibition result line; null clears it.
+     * @param exhibitionResult the result text, or null
+     */
     public void setExhibitionResult(String exhibitionResult) {
-        this.exhibitionResult = exhibitionResult == null ? "" : exhibitionResult;
+        if (exhibitionResult == null) {
+            this.exhibitionResult = "";
+        }
+        else {
+            this.exhibitionResult = exhibitionResult;
+        }
     }
 
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Sets the success message shown to the user; null clears it.
+     * @param message the message text, or null
+     */
     public void setMessage(String message) {
-        this.message = message == null ? "" : message;
+        if (message == null) {
+            this.message = "";
+        }
+        else {
+            this.message = message;
+        }
     }
 
     public String getError() {
         return error;
     }
 
+    /**
+     * Sets the error message shown to the user; null clears it.
+     * @param error the error text, or null
+     */
     public void setError(String error) {
-        this.error = error == null ? "" : error;
+        if (error == null) {
+            this.error = "";
+        }
+        else {
+            this.error = error;
+        }
     }
 
     /**

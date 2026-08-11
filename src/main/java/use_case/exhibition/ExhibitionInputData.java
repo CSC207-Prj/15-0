@@ -5,19 +5,19 @@ package use_case.exhibition;
  * fighters the player picked.
  */
 public class ExhibitionInputData {
-    private final String fighterAName;
-    private final String fighterBName;
+    private final String firstFighterName;
+    private final String secondFighterName;
 
-    public ExhibitionInputData(String fighterAName, String fighterBName) {
-        this.fighterAName = fighterAName;
-        this.fighterBName = fighterBName;
+    public ExhibitionInputData(String firstFighterName, String secondFighterName) {
+        this.firstFighterName = firstFighterName;
+        this.secondFighterName = secondFighterName;
     }
 
-    public String getFighterAName() {
-        return fighterAName;
+    public String getFirstFighterName() {
+        return firstFighterName;
     }
 
-    public String getFighterBName() {
-        return fighterBName;
+    public String getSecondFighterName() {
+        return secondFighterName;
     }
 }
