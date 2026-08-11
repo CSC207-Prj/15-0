@@ -1,15 +1,15 @@
 package use_case.confirm;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 import entity.CustomFighter;
 import entity.Division;
 import entity.GameRun;
 import entity.GameSettings;
 import entity.WeightClass;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Handles fighter confirmation and creates the corresponding gauntlet run.
@@ -213,9 +213,10 @@ public class ConfirmInteractor implements ConfirmInputBoundary {
      */
     @Override
     public void confirm(ConfirmInputData inputData) {
-        if (inputData == null || inputData.getFighterName() == null
-                || inputData.getFighterName().isEmpty() ||
-                inputData.getAttributePoints().isEmpty()) {
+        if (inputData == null
+                || inputData.getFighterName() == null
+                || inputData.getFighterName().isEmpty()
+                || inputData.getAttributePoints().isEmpty()) {
             outputboundary.prepareFailureView(
                     "Fighter name cannot be empty"
             );

@@ -63,7 +63,8 @@ public class ConfirmState {
         attributePoints.clear();
         if (newAttributePoints == null) {
             resetAttributePoints();
-        }else {
+        }
+        else {
             attributePoints.addAll(newAttributePoints);
         }
     }
@@ -83,7 +84,7 @@ public class ConfirmState {
      * @param weightClass the weight-class display name
      */
     public void setWeightClass(String weightClass) {
-        if (weightClass == null){
+        if (weightClass == null) {
             this.weightClass = DEFAULT_WEIGHT_CLASS;
         }
         this.weightClass = weightClass;
@@ -105,7 +106,7 @@ public class ConfirmState {
      * @param overall the display-ready overall rating
      */
     public void setOverall(String overall) {
-        if (overall == null){
+        if (overall == null) {
             this.overall = DEFAULT_OVERALL;
         }
         this.overall = overall;

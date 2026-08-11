@@ -34,8 +34,6 @@ public class ConfirmPresenter implements ConfirmOutputBoundary {
         state.setConfirmed(confirm);
         state.setErrorMessage(null);
         confirmViewModel.firePropertyChanged();
-
-
     }
 
     /**

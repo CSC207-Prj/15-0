@@ -1,9 +1,5 @@
 package view;
 
-import interface_adapter.confirm_fighter.ConfirmController;
-import interface_adapter.confirm_fighter.ConfirmState;
-import interface_adapter.confirm_fighter.ConfirmViewModel;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -13,7 +9,18 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import interface_adapter.confirm_fighter.ConfirmController;
+import interface_adapter.confirm_fighter.ConfirmState;
+import interface_adapter.confirm_fighter.ConfirmViewModel;
 
 /**
  * Displays the fighter naming, weight-class spin, and rating controls.
@@ -32,7 +39,6 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
     private final JLabel overall = UfcTheme.centeredLabel("--", new Font(Font.SANS_SERIF,
             Font.BOLD, 58), UfcTheme.ACCENT);
 
-
     /**
      * Creates the confirm-fighter screen.
      *
@@ -41,7 +47,7 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
      * @param backAction the action to run when the user goes back
      * @param continueAction the action to run after confirmation
      */
-    public ConfirmView(ConfirmController confirmController, ConfirmViewModel confirmViewModel,Runnable backAction,
+    public ConfirmView(ConfirmController confirmController, ConfirmViewModel confirmViewModel, Runnable backAction,
                        Runnable continueAction) {
         this.confirmController = confirmController;
         this.confirmViewModel = confirmViewModel;
@@ -66,11 +72,10 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
         content.add(createDivisionPanel());
         add(content, BorderLayout.CENTER);
 
-        final JPanel actions = UfcTheme.panel( new FlowLayout(FlowLayout.CENTER, 18, 16));
+        final JPanel actions = UfcTheme.panel(new FlowLayout(FlowLayout.CENTER, 18, 16));
         actions.setBackground(UfcTheme.HEADER);
 
         final JButton back = UfcTheme.secondaryButton("Back to Draft");
-
 
         back.addActionListener(event -> backAction.run());
         spin.addActionListener(event -> {
@@ -191,13 +196,15 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
 
         if (state.getWeightClass() == null) {
             division.setText("TBD");
-        } else {
+        }
+        else {
             division.setText(state.getWeightClass());
         }
 
         if (state.getOverall() == null) {
             overall.setText("--");
-        } else {
+        }
+        else {
             overall.setText(state.getOverall());
         }
 
