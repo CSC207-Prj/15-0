@@ -57,7 +57,7 @@ class SavedFighterAdaptersTest {
         load.prepareSuccessView(new LoadFighterOutputData(
                 "Alpha", "Lightweight", "2-1", 1, values, false));
         assertEquals(
-                "Alpha (Lightweight, 2-1, 1 finishes) — Striking 90, Cardio 80",
+                "Alpha (Lightweight, 2-1, 1 finishes) - Striking 90, Cardio 80",
                 viewModel.getState().getLoadedFighterDetails());
         load.prepareFailView("cannot load");
         assertEquals("cannot load", viewModel.getState().getError());
@@ -83,8 +83,8 @@ class SavedFighterAdaptersTest {
         final ExhibitionInputData[] exhibition = {null};
         new ExhibitionController(input -> exhibition[0] = input)
                 .execute("Alpha", "Bravo");
-        assertEquals("Alpha", exhibition[0].getFighterAName());
-        assertEquals("Bravo", exhibition[0].getFighterBName());
+        assertEquals("Alpha", exhibition[0].getFirstFighterName());
+        assertEquals("Bravo", exhibition[0].getSecondFighterName());
 
         final boolean[] roster = {false};
         new ViewRosterController(() -> roster[0] = true).execute();

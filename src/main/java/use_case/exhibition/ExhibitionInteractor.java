@@ -30,41 +30,48 @@ public class ExhibitionInteractor implements ExhibitionInputBoundary {
 
     @Override
     public void execute(ExhibitionInputData inputData) {
-        final String nameA = inputData.getFighterAName();
-        final String nameB = inputData.getFighterBName();
+        final String firstName = inputData.getFirstFighterName();
+        final String secondName = inputData.getSecondFighterName();
 
-        if (isBlank(nameA) || isBlank(nameB)) {
+        if (isBlank(firstName) || isBlank(secondName)) {
             presenter.prepareFailView("Choose two saved fighters for the exhibition match.");
-            return;
         }
-        if (nameA.trim().equalsIgnoreCase(nameB.trim())) {
+        else if (firstName.trim().equalsIgnoreCase(secondName.trim())) {
             presenter.prepareFailView("Choose two different fighters for the exhibition match.");
-            return;
         }
+        else {
+            findAndRun(firstName, secondName);
+        }
+    }
 
-        final CustomFighter fighterA = rosterDataAccess.getByName(nameA);
-        if (fighterA == null) {
-            presenter.prepareFailView("No saved fighter named \"" + nameA + "\" was found.");
-            return;
-        }
-        final CustomFighter fighterB = rosterDataAccess.getByName(nameB);
-        if (fighterB == null) {
-            presenter.prepareFailView("No saved fighter named \"" + nameB + "\" was found.");
-            return;
-        }
+    private void findAndRun(String firstName, String secondName) {
+        final CustomFighter firstFighter = rosterDataAccess.getByName(firstName);
+        final CustomFighter secondFighter = rosterDataAccess.getByName(secondName);
 
+        if (firstFighter == null) {
+            presenter.prepareFailView("No saved fighter named \"" + firstName + "\" was found.");
+        }
+        else if (secondFighter == null) {
+            presenter.prepareFailView("No saved fighter named \"" + secondName + "\" was found.");
+        }
+        else {
+            runMatch(firstFighter, secondFighter);
+        }
+    }
+
+    private void runMatch(CustomFighter firstFighter, CustomFighter secondFighter) {
         final FightResult result = fightSimulator.simulate(
-                fighterA, asOpponent(fighterB), EXHIBITION_ROUNDS, Difficulty.NORMAL);
+                firstFighter, asOpponent(secondFighter), EXHIBITION_ROUNDS, Difficulty.NORMAL);
 
         final String winnerName;
         final String loserName;
         if (result.isPlayerWon()) {
-            winnerName = fighterA.getName();
-            loserName = fighterB.getName();
+            winnerName = firstFighter.getName();
+            loserName = secondFighter.getName();
         }
         else {
-            winnerName = fighterB.getName();
-            loserName = fighterA.getName();
+            winnerName = secondFighter.getName();
+            loserName = firstFighter.getName();
         }
 
         presenter.prepareSuccessView(new ExhibitionOutputData(

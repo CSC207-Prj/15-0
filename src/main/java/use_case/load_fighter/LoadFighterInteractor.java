@@ -28,15 +28,20 @@ public class LoadFighterInteractor implements LoadFighterInputBoundary {
 
         if (fighterName == null || fighterName.trim().isEmpty()) {
             presenter.prepareFailView("Choose a fighter to load.");
-            return;
         }
-
-        final CustomFighter fighter = rosterDataAccess.getByName(fighterName);
-        if (fighter == null) {
-            presenter.prepareFailView("No saved fighter named \"" + fighterName + "\" was found.");
-            return;
+        else {
+            final CustomFighter fighter = rosterDataAccess.getByName(fighterName);
+            if (fighter == null) {
+                presenter.prepareFailView(
+                        "No saved fighter named \"" + fighterName + "\" was found.");
+            }
+            else {
+                presentFighter(fighter);
+            }
         }
+    }
 
+    private void presentFighter(CustomFighter fighter) {
         final String weightClassName;
         if (fighter.getWeightClass() == null) {
             weightClassName = WEIGHT_CLASS_UNASSIGNED;
