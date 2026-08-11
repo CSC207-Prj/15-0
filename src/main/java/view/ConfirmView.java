@@ -16,7 +16,7 @@ import java.util.List;
 import javax.swing.*;
 
 /**
- *Naming, spin, and rating controls view.
+ * Displays the fighter naming, weight-class spin, and rating controls.
  */
 public final class ConfirmView extends JPanel implements PropertyChangeListener {
     private final ConfirmController confirmController;
@@ -33,6 +33,14 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
             Font.BOLD, 58), UfcTheme.ACCENT);
 
 
+    /**
+     * Creates the confirm-fighter screen.
+     *
+     * @param confirmController the controller for confirm-screen actions
+     * @param confirmViewModel the view model that supplies screen state
+     * @param backAction the action to run when the user goes back
+     * @param continueAction the action to run after confirmation
+     */
     public ConfirmView(ConfirmController confirmController, ConfirmViewModel confirmViewModel,Runnable backAction,
                        Runnable continueAction) {
         this.confirmController = confirmController;
@@ -81,6 +89,11 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
         updateView(confirmViewModel.getState());
     }
 
+    /**
+     * Creates the panel that displays the fighter's name and attributes.
+     *
+     * @return the configured fighter panel
+     */
     private JPanel createFighterPanel() {
         final JPanel panel = UfcTheme.panel(new BorderLayout());
         panel.setBorder(UfcTheme.cardBorder());
@@ -118,6 +131,11 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
         return panel;
     }
 
+    /**
+     * Creates the panel that displays the weight class and overall rating.
+     *
+     * @return the configured division panel
+     */
     private JPanel createDivisionPanel() {
         final JPanel panel = UfcTheme.panel(null);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -142,11 +160,21 @@ public final class ConfirmView extends JPanel implements PropertyChangeListener 
         return panel;
     }
 
+    /**
+     * Refreshes the screen when the view-model state changes.
+     *
+     * @param evt the property-change event
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         updateView(confirmViewModel.getState());
     }
 
+    /**
+     * Updates the displayed controls from the supplied state.
+     *
+     * @param state the latest confirm-screen state
+     */
     private void updateView(ConfirmState state) {
         final List<String> attributes = state.getAttributePoints();
 

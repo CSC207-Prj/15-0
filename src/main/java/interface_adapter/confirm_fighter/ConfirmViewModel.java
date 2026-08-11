@@ -18,14 +18,27 @@ public class ConfirmViewModel extends ViewModel {
 
     private ConfirmState state = new ConfirmState();
 
+    /**
+     * Creates a view model for the confirm-fighter screen.
+     */
     public ConfirmViewModel() {
         super(VIEW_NAME);
     }
 
+    /**
+     * Gets the current confirm-screen state.
+     *
+     * @return the current state
+     */
     public ConfirmState getState() {
         return state;
     }
 
+    /**
+     * Replaces the current confirm-screen state.
+     *
+     * @param state the new state, or null to restore the default state
+     */
     public void setState(ConfirmState state) {
         if (state == null) {
             this.state = new ConfirmState();
@@ -35,6 +48,9 @@ public class ConfirmViewModel extends ViewModel {
         }
     }
 
+    /**
+     * Notifies listeners that the confirm-screen state has changed.
+     */
     public void firePropertyChanged() {
         firePropertyChanged("state", state);
     }
