@@ -22,8 +22,10 @@ public class ConfirmInputData {
         this.fighterName = fighterName;
         if (attributePoints == null) {
             this.attributePoints = new ArrayList<>();
-        }else{
-        this.attributePoints = new ArrayList<>(attributePoints);}
+        }
+        else {
+            this.attributePoints = new ArrayList<>(attributePoints);
+        }
         this.weightClass = weightClass;
     }
 

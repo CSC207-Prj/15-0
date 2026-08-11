@@ -1,8 +1,9 @@
 package interface_adapter.confirm_fighter;
 
+import java.util.List;
+
 import use_case.confirm.ConfirmInputBoundary;
 import use_case.confirm.ConfirmInputData;
-import java.util.List;
 
 /**
  * Converts confirm-screen actions into input data for the confirm use case.

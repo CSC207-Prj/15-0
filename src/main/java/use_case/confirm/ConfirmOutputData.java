@@ -20,12 +20,14 @@ public class ConfirmOutputData {
      * @param weightClass the fighter's selected weight class
      * @param overall the fighter's calculated overall rating
      */
-    public ConfirmOutputData(String fighterName, List<String> attributePoints, String weightClass,  int overall) {
+    public ConfirmOutputData(String fighterName, List<String> attributePoints, String weightClass, int overall) {
         this.fighterName = fighterName;
         if (attributePoints == null) {
             this.attributePoints = new ArrayList<>();
-        }else{
-        this.attributePoints = new ArrayList<>(attributePoints);}
+        }
+        else {
+            this.attributePoints = new ArrayList<>(attributePoints);
+        }
         this.weightClass = weightClass;
         this.overall = overall;
     }
